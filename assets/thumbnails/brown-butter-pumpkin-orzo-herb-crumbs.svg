@@ -1,0 +1,31 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#F2ECE1"/>
+  <ellipse cx="615" cy="434" rx="330" ry="180" fill="#D9D0BF"/>
+  <ellipse cx="600" cy="402" rx="286" ry="150" fill="#171717"/>
+  <ellipse cx="600" cy="378" rx="246" ry="114" fill="#D48647"/>
+  <ellipse cx="528" cy="360" rx="82" ry="36" fill="#E4A15E"/>
+  <ellipse cx="650" cy="396" rx="92" ry="42" fill="#C97938"/>
+  <ellipse cx="717" cy="350" rx="72" ry="30" fill="#E8B268"/>
+  <ellipse cx="478" cy="406" rx="68" ry="26" fill="#C46C30"/>
+  <ellipse cx="584" cy="332" rx="78" ry="28" fill="#F0BC79"/>
+  <ellipse cx="758" cy="408" rx="84" ry="34" fill="#D89247"/>
+  <g fill="#F4E5C4">
+    <circle cx="468" cy="328" r="10"/>
+    <circle cx="506" cy="309" r="8"/>
+    <circle cx="553" cy="296" r="11"/>
+    <circle cx="612" cy="289" r="9"/>
+    <circle cx="673" cy="300" r="10"/>
+    <circle cx="731" cy="320" r="9"/>
+    <circle cx="784" cy="344" r="11"/>
+  </g>
+  <g fill="#556B3D">
+    <ellipse cx="505" cy="260" rx="8" ry="20" transform="rotate(-18 505 260)"/>
+    <ellipse cx="560" cy="248" rx="7" ry="18" transform="rotate(12 560 248)"/>
+    <ellipse cx="627" cy="250" rx="8" ry="22" transform="rotate(-4 627 250)"/>
+    <ellipse cx="689" cy="267" rx="7" ry="18" transform="rotate(20 689 267)"/>
+    <ellipse cx="749" cy="294" rx="8" ry="19" transform="rotate(-22 749 294)"/>
+  </g>
+  <text x="70" y="92" fill="#171717" font-family="Manrope, Arial, sans-serif" font-size="28" letter-spacing="6">THUMBNAIL PREVIEW</text>
+  <text x="70" y="146" fill="#171717" font-family="Space Grotesk, Arial, sans-serif" font-size="54">Brown Butter Pumpkin Orzo</text>
+  <text x="70" y="194" fill="#5C5C5C" font-family="Manrope, Arial, sans-serif" font-size="28">with Herb Crumbs</text>
+</svg>

@@ -1,0 +1,11 @@
+Use case: product-mockup
+Asset type: recipe-card thumbnail
+Primary request: an overhead editorial food photograph of brown butter pumpkin orzo with herb crumbs
+Subject: a shallow black bowl of glossy pumpkin orzo, nutty brown butter sheen, crisp herb crumbs, scattered fried sage
+Style/medium: premium food photography, clean culinary magazine aesthetic
+Composition/framing: top-down close shot, centered bowl, enough negative space around the plate for UI cropping
+Lighting/mood: soft natural studio light, warm autumn tone, subtle contrast
+Color palette: pumpkin orange, butter gold, herb green, matte black, cream tabletop
+Materials/textures: creamy orzo, crunchy crumbs, glossy butter, ceramic bowl
+Constraints: no hands, no cutlery, no text, no watermark, no extra dishes
+Avoid: cluttered table, rustic props overload, cartoon styling

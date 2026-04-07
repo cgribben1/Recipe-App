@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Palette</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <section class="screen screen-active" data-screen="landing">
+      <div class="hero-panel">
+        <p class="eyebrow">Minimal culinary companion</p>
+        <h1>Palette</h1>
+        <p class="hero-copy">
+          Pre-generated recipes for whatever mood you are in. Choose your effort level, then describe the vibe if you want something more specific.
+        </p>
+        <div class="control-block">
+          <span class="control-label">How much work are we doing?</span>
+          <div class="complexity-grid" id="complexityButtons"></div>
+        </div>
+        <div class="control-block">
+          <label class="control-label" for="vibeInput">What kind of dish are you craving?</label>
+          <input id="vibeInput" type="text" placeholder="Examples: glossy noodles, cozy cold-weather comfort, bright lemony dinner..." />
+          <div class="prompt-suggestion-row">
+            <span class="prompt-suggestion-label">Try</span>
+            <div class="prompt-suggestion-marquee">
+              <div class="prompt-suggestion-rail" id="promptSuggestions"></div>
+            </div>
+          </div>
+        </div>
+        <button class="primary-button" id="generateButton">Generate dishes</button>
+        <p class="enter-hint">Press <span class="keycap keycap-dark">Enter</span> to generate recipes.</p>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="loading">
+      <div class="loading-panel">
+        <div class="pixel-scene" aria-hidden="true">
+          <div class="steam steam-one"></div>
+          <div class="steam steam-two"></div>
+          <div class="steam steam-three"></div>
+          <div class="bowl"></div>
+          <div class="ladle"></div>
+        </div>
+        <p class="eyebrow">Curating tonight's options</p>
+        <h2>Searching the pantry of possibilities...</h2>
+        <p class="loading-copy">Filtering the cache by your chosen constraints, then ranking the remaining dishes by semantic vibe match.</p>
+      </div>
+    </section>
+
+    <section class="screen results-screen" data-screen="results">
+      <div class="deck-frame">
+        <button class="nav-arrow nav-arrow-left" id="previousRecipeButton" aria-label="Previous recipe">&#8592;</button>
+        <div class="deck-stack" id="recipeDeck"></div>
+        <button class="nav-arrow nav-arrow-right" id="nextRecipeButton" aria-label="Next recipe">&#8594;</button>
+      </div>
+      <div class="deck-dots" id="recipeDots" aria-label="Recipe position"></div>
+    </section>
+
+    <section class="screen cooking-screen" data-screen="cook">
+      <div class="cook-hint">Press <span class="keycap">Esc</span> to exit</div>
+      <aside class="cook-ingredients">
+        <p class="cook-ingredients-label">For this step</p>
+        <div class="cook-ingredients-list" id="cookIngredientsList"></div>
+      </aside>
+      <div class="cook-recipe-title" id="cookRecipeTitle"></div>
+      <div class="cook-content">
+        <div class="cook-lyrics">
+          <div class="cook-track" id="cookTrack"></div>
+        </div>
+      </div>
+      <div class="cook-controls">
+        <button class="cook-secondary" id="cookPreviousButton" aria-label="Previous step">&#8593;</button>
+        <button class="cook-next" id="cookNextButton" aria-label="Next step">&#8595;</button>
+      </div>
+    </section>
+
+    <section class="screen finish-screen" data-screen="finish">
+      <div class="finish-card">
+        <p class="finish-text">Bon appetit.</p>
+        <div class="finish-line"></div>
+        <div class="finish-actions">
+          <button class="mini-button finish-button" id="finishSaveButton">Save recipe</button>
+          <button class="ghost-button finish-button" id="finishBackButton">Back to recipes</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop hidden" id="detailModal">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal="detailModal" aria-label="Close details">x</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="shoppingModal">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal="shoppingModal" aria-label="Close shopping list">x</button>
+      <div id="shoppingContent"></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="savedModal">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal="savedModal" aria-label="Close saved recipes">x</button>
+      <div id="savedContent"></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="alterModal">
+    <div class="modal-card alter-modal-card">
+      <button class="modal-close" data-close-modal="alterModal" aria-label="Close alter recipe">x</button>
+      <div class="alter-modal-copy">
+        <p class="eyebrow">Alter recipe</p>
+        <h2 id="alterRecipeHeading">Alter this recipe</h2>
+        <p class="detail-summary">Ask for a specific tweak to the dish, such as replacing one component, making it more weeknight-friendly, or nudging it toward a different flavor direction.</p>
+      </div>
+      <label class="control-label" for="alterRequestInput">What would you like to change?</label>
+      <textarea id="alterRequestInput" placeholder="Examples: Replace the bread sauce with a glossy chicken gravy. Add a little Asian fusion. Make it brighter and more lemony."></textarea>
+      <div class="prompt-suggestion-row alter-suggestion-row">
+        <span class="prompt-suggestion-label">Ideas</span>
+        <div class="prompt-suggestion-marquee alter-suggestion-wrap">
+          <div class="prompt-suggestion-rail alter-suggestion-rail" id="alterSuggestionRail"></div>
+        </div>
+      </div>
+      <div class="alter-loader hidden" id="alterLoader" aria-hidden="true">
+        <span class="alter-loader-dot"></span>
+        <span class="alter-loader-dot"></span>
+        <span class="alter-loader-dot"></span>
+      </div>
+      <p class="alter-status" id="alterStatus" aria-live="polite"></p>
+      <div class="detail-actions alter-actions">
+        <button class="ghost-button" data-close-modal="alterModal">Cancel</button>
+        <button class="primary-button" id="submitAlterButton">Apply alteration</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./recipes-data.js"></script>
+  <script src="./recipe-embeddings.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

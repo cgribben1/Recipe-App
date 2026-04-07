@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: palette-recipe-app
+    runtime: python
+    plan: starter
+    autoDeploy: true
+    buildCommand: python -m pip install --upgrade pip
+    startCommand: python server.py
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: OPENAI_API_KEY
+        sync: false
