@@ -14,12 +14,15 @@ BASE_STYLE = {
 }
 
 COMPOSITIONS = [
-    "square crop, close overhead angle, plated dish centered with a little breathing room",
+    "square crop, close overhead angle, plated dish offset from center with loose editorial framing",
     "square crop, low three-quarter dining angle, dish slightly off-center like a magazine feature",
-    "square crop, near top-down cafe table view, dish filling most of the frame",
-    "square crop, eye-level close table angle, intimate restaurant-style framing",
-    "square crop, overhead but not flat, bowl or plate captured with natural asymmetry",
-    "square crop, three-quarter angle with shallow depth of field and tight editorial framing"
+    "square crop, near top-down cafe table view, dish filling most of the frame with irregular spacing around it",
+    "square crop, eye-level close table angle, intimate restaurant-style framing with a little crop into the edge of the plate",
+    "square crop, overhead but not flat, bowl or plate captured with natural asymmetry and no strict centering",
+    "square crop, three-quarter angle with shallow depth of field and tight editorial framing",
+    "square crop, dramatic partial crop with the dish entering the frame from one side, artful but realistic",
+    "square crop, slightly tilted restaurant-table angle, imperfect and natural rather than symmetrical",
+    "square crop, close side angle with foreground blur and a looser magazine-style crop"
 ]
 
 LIGHTING_SETUPS = [
@@ -46,7 +49,9 @@ MATERIAL_SCENES = [
     "served in a shallow off-white bowl on brushed stone with a folded linen napkin nearby",
     "served on rustic glazed pottery over a worn wooden cafe table, quietly elegant",
     "served on a modern charcoal plate over light oak with very minimal table setting",
-    "served in refined porcelain on a cool grey marble surface with understated styling"
+    "served in refined porcelain on a cool grey marble surface with understated styling",
+    "served in a handmade ceramic bowl with slightly irregular edges on a textured cafe table",
+    "served on a small stacked setting with one bowl or plate overlapping another surface naturally"
 ]
 
 SETTING_DETAILS = [
@@ -55,7 +60,9 @@ SETTING_DETAILS = [
     "minimal cutlery can appear softly out of focus if appropriate to the dish",
     "keep the setting sparse and architectural with almost no supporting objects",
     "allow a quiet restaurant-table feel with one discreet glass or side plate",
-    "keep the scene intimate and uncluttered, with props only if they support realism"
+    "keep the scene intimate and uncluttered, with props only if they support realism",
+    "favor odd-number garnish placement and natural imperfection over symmetry",
+    "allow a casually placed napkin or spoon if it supports a more candid editorial feel"
 ]
 
 

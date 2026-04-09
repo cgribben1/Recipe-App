@@ -3,37 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Palette</title>
+  <title>Palette v2.89</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=2.89">
 </head>
 <body>
   <div class="app-shell">
     <section class="screen screen-active" data-screen="landing">
-      <div class="hero-panel">
-        <p class="eyebrow">Minimal culinary companion</p>
-        <h1>Palette</h1>
-        <p class="hero-copy">
-          Pre-generated recipes for whatever mood you are in. Choose your effort level, then describe the vibe if you want something more specific.
-        </p>
-        <div class="control-block">
-          <span class="control-label">How much work are we doing?</span>
-          <div class="complexity-grid" id="complexityButtons"></div>
-        </div>
-        <div class="control-block">
-          <label class="control-label" for="vibeInput">What kind of dish are you craving?</label>
-          <input id="vibeInput" type="text" placeholder="Examples: glossy noodles, cozy cold-weather comfort, bright lemony dinner..." />
-          <div class="prompt-suggestion-row">
-            <span class="prompt-suggestion-label">Try</span>
-            <div class="prompt-suggestion-marquee">
-              <div class="prompt-suggestion-rail" id="promptSuggestions"></div>
+      <div class="landing-shell">
+        <aside class="landing-sidebar landing-panel">
+          <div class="landing-sidebar-top">
+            <p class="landing-sidebar-label">Workspace</p>
+            <div class="landing-profile-card">
+              <div class="landing-profile-mark">P.</div>
+              <div>
+                <p class="landing-profile-name">Palette user</p>
+                <p class="landing-profile-meta">Culinary profile</p>
+              </div>
             </div>
           </div>
+
+          <div class="landing-sidebar-group">
+            <p class="landing-sidebar-label">Browse</p>
+            <button class="landing-side-button landing-side-button-active" type="button">Discover</button>
+            <button class="landing-side-button" type="button" data-nav-screen="explore">Explore</button>
+            <button class="landing-side-button" type="button" data-action="saved">Saved recipes</button>
+            <button class="landing-side-button" type="button">Recently cooked</button>
+          </div>
+
+          <div class="landing-sidebar-group landing-sidebar-note">
+            <p class="landing-sidebar-label">Tonight</p>
+            <p class="landing-sidebar-copy">Filter by effort, add a vibe if you want, and let the cache do the rest.</p>
+          </div>
+        </aside>
+
+        <div class="landing-main landing-panel">
+          <h1>Palette<span class="title-dot">.</span></h1>
+          <p class="hero-copy">
+            Recipes for whatever mood you are in...
+          </p>
+          <div class="control-block">
+            <span class="control-label">How much work are we doing?</span>
+            <div class="complexity-grid" id="complexityButtons"></div>
+          </div>
+          <div class="control-block">
+            <span class="control-label">What are we eating?</span>
+            <div class="complexity-grid diet-grid" id="dietButtons"></div>
+          </div>
+          <div class="control-block">
+            <div class="vibe-input-row">
+              <div class="vibe-input-stack">
+                <div class="vibe-row">
+                  <label class="control-label" for="vibeInput">What kind of dish are you craving?</label>
+                </div>
+                <div class="treadmill-slot treadmill-slot-top" id="promptSuggestionsTop"></div>
+                <div class="treadmill-slot treadmill-slot-bottom" id="promptSuggestionsBottom"></div>
+                <input id="vibeInput" type="text" placeholder="Enter any vibe you have in mind..." />
+              </div>
+            </div>
+          </div>
+          <div class="landing-action-row">
+            <button class="primary-button" id="generateButton">Generate dishes</button>
+          </div>
         </div>
-        <button class="primary-button" id="generateButton">Generate dishes</button>
-        <p class="enter-hint">Press <span class="keycap keycap-dark">Enter</span> to generate recipes.</p>
       </div>
     </section>
 
@@ -52,7 +86,42 @@
       </div>
     </section>
 
+    <section class="screen explore-screen" data-screen="explore">
+      <div class="explore-panel explore-vision-panel">
+        <div class="explore-vision-header">
+          <div>
+            <p class="eyebrow">Explore</p>
+            <h2>A sea of dishes.</h2>
+            <p class="explore-copy">A visual browse mode for when you do not want to search so much as drift. Recipes are grouped into embedding-led islands so similar dishes gather together, and you can pan and zoom through them.</p>
+          </div>
+          <div class="explore-header-actions">
+            <div class="explore-zoom-controls">
+              <button class="ghost-button explore-zoom-button" id="exploreZoomOutButton" aria-label="Zoom out">−</button>
+              <button class="ghost-button explore-zoom-button" id="exploreZoomResetButton">100%</button>
+              <button class="ghost-button explore-zoom-button" id="exploreZoomInButton" aria-label="Zoom in">+</button>
+            </div>
+            <button class="ghost-button explore-back-button" id="exploreBackButton">Back to home</button>
+          </div>
+        </div>
+        <div class="explore-vision-meta">
+          <span class="explore-vision-note" id="exploreVisionSummary">Embedding islands</span>
+          <span class="explore-vision-note">Scroll or drag to move</span>
+          <span class="explore-vision-note">Click for recipe details</span>
+        </div>
+        <div class="explore-map-frame">
+          <div class="explore-map-surface" id="exploreVisionGrid"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="screen results-screen" data-screen="results">
+      <div class="results-topbar">
+        <button class="ghost-button results-home-button" id="resultsHomeButton">Back to home</button>
+        <div class="results-heading-block">
+          <p class="eyebrow">Curated matches</p>
+          <h2 class="results-heading" id="resultsHeading">Best matches for tonight</h2>
+        </div>
+      </div>
       <div class="deck-frame">
         <button class="nav-arrow nav-arrow-left" id="previousRecipeButton" aria-label="Previous recipe">&#8592;</button>
         <div class="deck-stack" id="recipeDeck"></div>
@@ -141,8 +210,8 @@
     </div>
   </div>
 
-  <script src="./recipes-data.js"></script>
-  <script src="./recipe-embeddings.js"></script>
-  <script src="./app.js"></script>
+  <script src="./recipes-data.js?v=2.89"></script>
+  <script src="./recipe-embeddings.js?v=2.89"></script>
+  <script src="./app.js?v=2.89"></script>
 </body>
 </html>

@@ -4,6 +4,34 @@ const complexities = [
   { id: "challenging", label: "Challenging", score: 3, description: "Technique forward" }
 ];
 
+const diets = [
+  { id: "any", label: "Anything", description: "Anything on the table" },
+  { id: "pescatarian", label: "Pescatarian", description: "Fish, seafood, dairy, eggs" },
+  { id: "vegetarian", label: "Vegetarian", description: "No meat or fish" },
+  { id: "vegan", label: "Vegan", description: "Entirely plant-based" }
+];
+
+const dietPreferenceWeights = {
+  any: {
+    meat: 24,
+    pescatarian: 16,
+    vegetarian: 8,
+    vegan: 0
+  },
+  pescatarian: {
+    pescatarian: 18,
+    vegetarian: 9,
+    vegan: 0
+  },
+  vegetarian: {
+    vegetarian: 14,
+    vegan: 0
+  },
+  vegan: {
+    vegan: 0
+  }
+};
+
 const recipeBlueprints = window.RECIPE_CACHE_DATA || [];
 const paletteLexicon = {
   cozy: ["comfort", "warm", "warming", "hearty", "soft"],
@@ -16,6 +44,27 @@ const paletteLexicon = {
 };
 
 const promptSuggestionsByComplexity = {
+  any: [
+    "open to anything delicious",
+    "surprise me with something good",
+    "whatever fits the mood best",
+    "chef's-choice supper",
+    "something I wouldn't think to make",
+    "the best match for tonight",
+    "a dish worth craving",
+    "something beautifully satisfying",
+    "a strong dinner mood",
+    "whatever the app thinks fits best",
+    "something memorable but not random",
+    "tonight could go in any direction",
+    "the kind of thing I'd order out",
+    "something cozy, bright, or rich",
+    "something unexpected but right",
+    "a dish with real character",
+    "something that feels spot on",
+    "the best possible fit",
+    "something a little transportive"
+  ],
   lazy: [
     "glossy noodles",
     "bright lemony dinner",
@@ -32,7 +81,22 @@ const promptSuggestionsByComplexity = {
     "creamy but not heavy",
     "15-minute comfort",
     "one-pan and cozy",
-    "toast-for-dinner energy"
+    "toast-for-dinner energy",
+    "fast but still chic",
+    "silky pantry pasta",
+    "cozy bowl in under 20",
+    "minimal washing up",
+    "crispy fridge-clear-out dinner",
+    "something brothy and quick",
+    "easy but still elegant",
+    "salty crunchy supper",
+    "green and speedy",
+    "lazy-night comfort",
+    "golden things on toast",
+    "smart pantry dinner",
+    "soft eggs and something vivid",
+    "weeknight instant gratification",
+    "simple but restaurant-adjacent"
   ],
   balanced: [
     "cozy cold-weather comfort",
@@ -50,13 +114,28 @@ const promptSuggestionsByComplexity = {
     "wine-bar kind of dinner",
     "brothy but substantial",
     "Sunday supper mood",
-    "herby roast chicken vibe"
+    "herby roast dinner vibe",
+    "crispy-edged and glossy",
+    "a little bit dinner-party",
+    "slow-roasted but manageable",
+    "proper pasta night",
+    "layered flavour, not too much work",
+    "something deeply savory and green",
+    "modern newspaper-cooking energy",
+    "roasty and elegant",
+    "market-veg but comforting",
+    "shallow bowl, glossy sauce",
+    "autumn dinner with a little polish",
+    "sharp herbs and mellow richness",
+    "candlelit weeknight dinner",
+    "weekend feeling without the project",
+    "bistro supper at home"
   ],
   challenging: [
     "date-night project pasta",
     "classic French weekend cooking",
     "slow braise and red wine",
-    "crispy skin and pan sauce",
+    "deep browning and pan sauce",
     "layered and luxurious",
     "restaurant-style comfort",
     "a proper cooking project",
@@ -68,13 +147,281 @@ const promptSuggestionsByComplexity = {
     "all-afternoon kind of supper",
     "precision and payoff",
     "bistro main-course feeling",
-    "theatrical dinner energy"
+    "theatrical dinner energy",
+    "long simmer, big reward",
+    "something with real technique",
+    "slow and luxurious",
+    "impressive-but-grounded cooking",
+    "old-school culinary project",
+    "deep sauce, proper finish",
+    "restaurant main with home warmth",
+    "rich weekend braise",
+    "beautifully over-the-top supper",
+    "serious pasta energy",
+    "special-occasion roast",
+    "classic done properly",
+    "a little cheffy",
+    "weekend stovetop ritual",
+    "showstopper but savory"
   ]
 };
 
+const promptSuggestionsByDiet = {
+  any: [
+    "open to anything delicious",
+    "chef's-choice supper",
+    "surprise me with something good",
+    "tonight could go any direction",
+    "whatever fits the mood best"
+  ],
+  pescatarian: [
+    "something briny and bright",
+    "seafood but still comforting",
+    "salmon or prawns energy",
+    "light, glossy, and coastal",
+    "fish-forward but cozy",
+    "brothy seafood dinner"
+  ],
+  vegetarian: [
+    "vegetable-led comfort",
+    "cheesy but meat-free",
+    "greens and carbs in harmony",
+    "mushroomy and satisfying",
+    "a proper vegetarian supper",
+    "deeply savory without meat"
+  ],
+  vegan: [
+    "plant-based but rich",
+    "vegan comfort bowl",
+    "bright vegetables and depth",
+    "tofu or beans but elevated",
+    "cozy and entirely plant-based",
+    "silky vegan dinner"
+  ]
+};
+
+const promptSuggestionsByComplexityAndDiet = {
+  any: {
+    any: [
+      "best-in-class dinner regardless of style",
+      "give me the strongest match full stop",
+      "something broadly craveable and excellent"
+    ],
+    pescatarian: [
+      "seafood-led but open-minded",
+      "something coastal, glossy, or brothy",
+      "fish or shellfish if that's the best fit"
+    ],
+    vegetarian: [
+      "meat-free but not restrained",
+      "vegetarian dinner with real presence",
+      "vegetable-led and genuinely satisfying"
+    ],
+    vegan: [
+      "plant-based but fully craveable",
+      "vegan dinner with real depth and comfort",
+      "something rich, green, or smoky and vegan"
+    ]
+  },
+  lazy: {
+    any: [
+      "whatever is fastest and tastiest",
+      "lazy-night comfort without rules"
+    ],
+    pescatarian: [
+      "quick salmon or prawn supper",
+      "easy seafood bowl energy"
+    ],
+    vegetarian: [
+      "fast meat-free comfort",
+      "quick cheesy vegetarian dinner"
+    ],
+    vegan: [
+      "easy vegan bowl situation",
+      "plant-based and pantry-friendly"
+    ]
+  },
+  balanced: {
+    any: [
+      "well-rounded dinner with some polish",
+      "something considered but flexible"
+    ],
+    pescatarian: [
+      "restaurant-ish fish supper",
+      "seafood dinner with a bit of elegance"
+    ],
+    vegetarian: [
+      "vegetarian dinner-party energy",
+      "meat-free but still a proper main"
+    ],
+    vegan: [
+      "polished vegan comfort",
+      "plant-based with real depth",
+      "mushroomy, glossy, and quietly elegant",
+      "a balanced vegan supper with real structure",
+      "deep flavor without feeling heavy"
+    ]
+  },
+  challenging: {
+    any: [
+      "special-occasion cooking of any kind",
+      "a proper weekend project"
+    ],
+    pescatarian: [
+      "showpiece seafood cooking",
+      "something brothy, briny, and impressive"
+    ],
+    vegetarian: [
+      "a serious vegetarian centrepiece",
+      "meat-free with restaurant ambition"
+    ],
+    vegan: [
+      "ambitious vegan cooking",
+      "plant-based but dinner-party worthy"
+    ]
+  }
+};
+
+const forbiddenSuggestionTermsByDiet = {
+  any: [],
+  pescatarian: ["chicken", "beef", "lamb", "goat", "pork", "sausage", "bacon", "meat", "roast chicken"],
+  vegetarian: ["chicken", "beef", "lamb", "goat", "pork", "sausage", "bacon", "meat", "fish", "seafood", "salmon", "prawn", "prawns", "shrimp", "mussel", "mussels", "clam", "clams", "roast chicken", "skin", "skinned"],
+  vegan: ["chicken", "beef", "lamb", "goat", "pork", "sausage", "bacon", "meat", "fish", "seafood", "salmon", "prawn", "prawns", "shrimp", "mussel", "mussels", "clam", "clams", "cheesy", "cheese", "buttery", "cream", "creamy", "egg", "eggs", "yogurt", "yoghurt", "roast chicken", "skin", "skinned"]
+};
+
+const suggestionNoiseWords = new Set([
+  "a", "an", "and", "at", "bit", "but", "by", "dinner", "energy", "feeling", "flavour",
+  "for", "from", "home", "kind", "little", "mood", "night", "not", "of", "or", "proper",
+  "really", "something", "still", "style", "supper", "the", "vibe", "worthy", "without"
+]);
+
+const suggestionClusters = [
+  { id: "comfort", label: "Cozy", match: ["cozy", "comfort", "warming", "brothy", "soothing", "hearty", "simmered", "cold-weather"] },
+  { id: "bright", label: "Bright", match: ["bright", "lemon", "fresh", "green", "herby", "clean", "light", "zesty"] },
+  { id: "rich", label: "Rich", match: ["rich", "luxurious", "glossy", "creamy", "indulgent", "silky", "golden"] },
+  { id: "spicy", label: "Bold", match: ["spicy", "fiery", "gochujang", "chili", "heat", "korean", "harissa"] },
+  { id: "classic", label: "Classic", match: ["french", "italian", "british", "bistro", "proper", "classic", "roast"] },
+  { id: "veg", label: "Green", match: ["vegetable", "veg", "market", "tofu", "beans", "plant-based", "mushroom"] },
+  { id: "project", label: "Project", match: ["project", "dinner-party", "weekend", "special-occasion", "technique", "showstopper"] },
+  { id: "playful", label: "Wildcard", match: [] }
+];
+
+const exploreIslandBlueprints = [
+  {
+    id: "cozy-european",
+    label: "Cozy Classics",
+    vibe: "bistro comfort, braises, roasty things, deep savoury warmth",
+    targetCount: 13,
+    include: ["french", "italian", "british", "braise", "stew", "roast", "comfort", "cozy", "bistro", "pie", "gratin", "bourguignon", "ragu"],
+    exclude: ["vegan", "tofu", "tempeh", "poke", "caesar wrap"]
+  },
+  {
+    id: "glossy-noodles-rice",
+    label: "Glossy Bowls",
+    vibe: "slick noodles, rice bowls, quick sauces, weeknight payoff",
+    targetCount: 13,
+    include: ["noodle", "udon", "ramen", "rice bowl", "fried rice", "gochujang", "soy", "sesame", "sticky", "miso", "kimchi"],
+    exclude: ["stew", "pie", "soup", "salad", "tart"]
+  },
+  {
+    id: "green-bright",
+    label: "Bright & Green",
+    vibe: "herby, lemony, fresh, clean, vegetable-led but still desirable",
+    targetCount: 13,
+    include: ["green", "herb", "herby", "lemon", "bright", "fresh", "spring", "pea", "broccoli", "asparagus", "salad", "vegetable"],
+    exclude: ["braise", "bourguignon", "pot roast", "carbonara"]
+  },
+  {
+    id: "tomato-pasta",
+    label: "Pasta Night",
+    vibe: "proper pasta, red sauce, creamy sauce, glossy bowls of comfort",
+    targetCount: 13,
+    include: ["pasta", "rigatoni", "spaghetti", "linguine", "tagliatelle", "penne", "gnocchi", "vodka", "bolognese", "carbonara", "tomato", "ricotta"],
+    exclude: ["soup", "salad", "flatbread", "toast"]
+  },
+  {
+    id: "spice-market",
+    label: "Spice Market",
+    vibe: "harissa, shawarma, curry, chile heat, warm spice, bold comfort",
+    targetCount: 13,
+    include: ["harissa", "shawarma", "curry", "turmeric", "spiced", "berbere", "tikka", "jollof", "chickpea stew", "goat", "kofta"],
+    exclude: ["gazpacho", "bruschetta", "carbonara"]
+  },
+  {
+    id: "sea-coast",
+    label: "From the Sea",
+    vibe: "fish, prawns, mussels, briny pasta, glossy seafood comfort",
+    targetCount: 13,
+    include: ["salmon", "cod", "sea bass", "prawn", "shrimp", "mussel", "clam", "seafood", "fish", "tuna", "mackerel"],
+    exclude: ["vegetarian", "vegan", "tofu", "bean stew"]
+  },
+  {
+    id: "vegetarian-comfort",
+    label: "Vegetarian Comfort",
+    vibe: "cheesy, mushroomy, deeply savoury meat-free mains",
+    targetCount: 12,
+    include: ["vegetarian", "halloumi", "paneer", "ricotta", "burrata", "feta", "mushroom", "cheese", "gruyere", "goat cheese", "leek"],
+    exclude: ["prawn", "shrimp", "chicken", "beef", "lamb", "pork", "vegan"]
+  },
+  {
+    id: "plant-rich",
+    label: "Plant-Rich",
+    vibe: "vegan dishes with richness, texture, depth, beans, tofu, aubergine",
+    targetCount: 12,
+    include: ["vegan", "tofu", "tempeh", "lentil", "chickpea", "aubergine", "cauliflower", "butter bean", "beans", "plant-based", "mushroom"],
+    exclude: ["feta", "ricotta", "burrata", "halloumi", "paneer", "salmon", "chicken", "beef", "lamb", "pork"]
+  },
+  {
+    id: "weekend-showpiece",
+    label: "Weekend Table",
+    vibe: "the sort of thing you make when dinner matters a bit more",
+    targetCount: 12,
+    include: ["challenging", "project", "special", "weekend", "dinner-party", "showstopper", "slow", "roast", "coq au vin", "ramen", "risotto"],
+    exclude: ["15-minute", "toast", "wrap", "cup"]
+  },
+  {
+    id: "golden-crispy",
+    label: "Golden & Crisp",
+    vibe: "crispy things, cutlets, schnitzels, roast potatoes, hot-pan satisfaction",
+    targetCount: 12,
+    include: ["crispy", "golden", "cutlet", "schnitzel", "crisp", "fried", "roast potato", "breaded", "caesar", "hot honey"],
+    exclude: ["soup", "broth", "gazpacho", "salad bowl"]
+  },
+  {
+    id: "broths-stews",
+    label: "Broths & Pots",
+    vibe: "soups, stews, brothy bowls, things you eat with a spoon",
+    targetCount: 12,
+    include: ["soup", "stew", "broth", "brothy", "chili", "curry soup", "ramen", "lentil soup", "bean stew", "dumpling soup"],
+    exclude: ["bruschetta", "flatbread", "pasta bake"]
+  },
+  {
+    id: "sunny-mediterranean",
+    label: "Sunny Mediterranean",
+    vibe: "tomatoes, peppers, olives, herbs, feta, lemon, white-wine brightness",
+    targetCount: 12,
+    include: ["mediterranean", "tomato", "olive", "pepper", "feta", "lemon", "bruschetta", "shawarma", "sardine", "sea bass", "caper"],
+    exclude: ["bourguignon", "ramen", "gochujang", "carbonara"]
+  }
+];
+
 const state = {
   selectedComplexity: "balanced",
+  selectedDiet: "any",
   vibe: "",
+  promptTypingTimer: null,
+  exploreProjection: null,
+  recipeSwipePointerId: null,
+  recipeSwipeStartX: 0,
+  recipeSwipeStartY: 0,
+  recipeSwipeDeltaX: 0,
+  recipeSwipeTracking: false,
+  exploreZoom: 1,
+  exploreDragging: false,
+  exploreDragStartX: 0,
+  exploreDragStartY: 0,
+  exploreScrollStartLeft: 0,
+  exploreScrollStartTop: 0,
   recipes: [],
   rankedRecipes: [],
   currentCardIndex: 0,
@@ -90,11 +437,22 @@ const state = {
 };
 
 const elements = {
+  appShell: document.querySelector(".app-shell"),
   screens: [...document.querySelectorAll(".screen")],
   complexityButtons: document.getElementById("complexityButtons"),
+  dietButtons: document.getElementById("dietButtons"),
   vibeInput: document.getElementById("vibeInput"),
-  promptSuggestions: document.getElementById("promptSuggestions"),
+  promptSuggestionsTop: document.getElementById("promptSuggestionsTop"),
+  promptSuggestionsBottom: document.getElementById("promptSuggestionsBottom"),
   generateButton: document.getElementById("generateButton"),
+  exploreBackButton: document.getElementById("exploreBackButton"),
+  exploreVisionGrid: document.getElementById("exploreVisionGrid"),
+  exploreVisionSummary: document.getElementById("exploreVisionSummary"),
+  exploreZoomInButton: document.getElementById("exploreZoomInButton"),
+  exploreZoomOutButton: document.getElementById("exploreZoomOutButton"),
+  exploreZoomResetButton: document.getElementById("exploreZoomResetButton"),
+  resultsHeading: document.getElementById("resultsHeading"),
+  resultsHomeButton: document.getElementById("resultsHomeButton"),
   recipeDeck: document.getElementById("recipeDeck"),
   recipeDots: document.getElementById("recipeDots"),
   previousRecipeButton: document.getElementById("previousRecipeButton"),
@@ -125,19 +483,70 @@ initialize();
 
 function initialize() {
   state.recipes = buildRecipeCache();
+  state.exploreProjection = buildExploreProjection(state.recipes);
   renderComplexityButtons();
+  renderDietButtons();
   renderPromptSuggestions();
+  renderExploreVision();
   attachEventListeners();
   startPromptPlaceholderRotation();
 }
 
 function getActivePromptSuggestions() {
-  return promptSuggestionsByComplexity[state.selectedComplexity] || promptSuggestionsByComplexity.balanced;
+  const complexityKey = state.selectedComplexity in promptSuggestionsByComplexity ? state.selectedComplexity : "balanced";
+  const diet = state.selectedDiet in promptSuggestionsByDiet ? state.selectedDiet : "any";
+  const combined = [
+    ...(promptSuggestionsByComplexity[complexityKey] || []),
+    ...(promptSuggestionsByDiet[diet] || []),
+    ...((promptSuggestionsByComplexityAndDiet[complexityKey] || {})[diet] || [])
+  ];
+  const forbiddenTerms = forbiddenSuggestionTermsByDiet[diet] || [];
+  const sanitized = [...new Set(combined)].filter((suggestion) => {
+    const lower = suggestion.toLowerCase();
+    return !forbiddenTerms.some((term) => lower.includes(term));
+  });
+  const supported = filterPromptSuggestionsByCurrentPool(sanitized);
+  return supported.length ? supported : sanitized;
+}
+
+function getSuggestionCandidateRecipes() {
+  const dietConstrained = constrainRecipesByDiet(state.recipes, state.selectedDiet);
+  return constrainRecipesByComplexity(dietConstrained, state.selectedComplexity);
+}
+
+function getSuggestionKeywordTokens(suggestion) {
+  return expandTokens(tokenize(suggestion)).filter((token) => !suggestionNoiseWords.has(token));
+}
+
+function filterPromptSuggestionsByCurrentPool(suggestions) {
+  const candidates = getSuggestionCandidateRecipes();
+  if (!candidates.length) return suggestions;
+
+  return suggestions.filter((suggestion) => {
+    const queryTokens = getSuggestionKeywordTokens(suggestion);
+    if (!queryTokens.length) return true;
+
+    const minimumOverlap = queryTokens.length >= 3 ? 2 : 1;
+    const bestOverlap = candidates.reduce((highest, recipe) => {
+      const recipeTokens = new Set(tokenize([
+        recipe.title,
+        recipe.summary,
+        recipe.cuisine,
+        recipe.moodTags.join(" "),
+        recipe.ingredients.join(" ")
+      ].join(" ")));
+      const overlap = queryTokens.reduce((count, token) => count + (recipeTokens.has(token) ? 1 : 0), 0);
+      return Math.max(highest, overlap);
+    }, 0);
+
+    return bestOverlap >= minimumOverlap;
+  });
 }
 
 function buildRecipeCache() {
   return recipeBlueprints.map((recipe) => ({
     ...normalizeComplexity(recipe),
+    diet: recipe.diet || inferRecipeDiet(recipe),
     id: recipe.id || slugify(recipe.title),
     title: recipe.title,
     cuisine: recipe.cuisine,
@@ -178,6 +587,143 @@ function normalizeComplexity(recipe) {
   if (raw === "lazy" || raw === "easy") return { complexity: "lazy", complexityLabel: "Lazy" };
   if (raw === "challenging" || raw === "project") return { complexity: "challenging", complexityLabel: "Challenging" };
   return { complexity: "balanced", complexityLabel: "Balanced" };
+}
+
+function inferRecipeDiet(recipe) {
+  const haystack = [
+    recipe.title || "",
+    recipe.summary || "",
+    recipe.cuisine || "",
+    ...(recipe.moodTags || []),
+    ...(recipe.ingredients || []),
+    ...(recipe.steps || [])
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  const veganSignals = [
+    "vegan",
+    "tofu",
+    "tempeh",
+    "beans",
+    "bean ",
+    "lentil",
+    "lentils",
+    "chickpea",
+    "chickpeas",
+    "aubergine",
+    "cauliflower"
+  ];
+  const meatSignals = [
+    "chicken",
+    "beef",
+    "lamb",
+    "goat",
+    "pork",
+    "sausage",
+    "bacon",
+    "pancetta",
+    "guanciale",
+    "prosciutto",
+    "ham",
+    "turkey",
+    "duck",
+    "veal",
+    "steak",
+    "meatball",
+    "meatballs",
+    "meatloaf",
+    "chorizo"
+  ];
+  const seafoodSignals = [
+    "fish",
+    "cod",
+    "salmon",
+    "trout",
+    "sole",
+    "haddock",
+    "tuna",
+    "clam",
+    "clams",
+    "mussel",
+    "mussels",
+    "shrimp",
+    "prawn",
+    "prawns",
+    "anchovy",
+    "anchovies",
+    "oyster sauce",
+    "fish sauce"
+  ];
+  const nonVeganSignals = [
+    ...meatSignals,
+    ...seafoodSignals,
+    "gelatin",
+    "egg",
+    "eggs",
+    "milk",
+    "butter",
+    "cream",
+    "cheese",
+    "parmesan",
+    "pecorino",
+    "gruyere",
+    "comte",
+    "yogurt",
+    "yoghurt",
+    "ricotta",
+    "burrata",
+    "feta",
+    "mozzarella",
+    "creme fraiche",
+    "crème fraîche",
+    "double cream"
+  ];
+  const vegetarianOnlySignals = [
+    "egg",
+    "eggs",
+    "milk",
+    "butter",
+    "cream",
+    "cheese",
+    "parmesan",
+    "pecorino",
+    "gruyere",
+    "comte",
+    "yogurt",
+    "yoghurt",
+    "ricotta",
+    "burrata",
+    "feta",
+    "mozzarella",
+    "creme fraiche",
+    "crème fraîche",
+    "double cream",
+    "paneer",
+    "halloumi",
+    "egg yolk",
+    "egg yolks",
+    "honey"
+  ];
+
+  if (meatSignals.some((signal) => haystack.includes(signal))) {
+    return "meat";
+  }
+
+  if (seafoodSignals.some((signal) => haystack.includes(signal))) {
+    return "pescatarian";
+  }
+
+  if (nonVeganSignals.some((signal) => haystack.includes(signal))) {
+    return "vegetarian";
+  }
+
+  if ((recipe.moodTags || []).some((tag) => String(tag).toLowerCase() === "vegan")) return "vegan";
+  if (veganSignals.some((signal) => haystack.includes(signal)) && !vegetarianOnlySignals.some((signal) => haystack.includes(signal))) {
+    return "vegan";
+  }
+
+  return "vegetarian";
 }
 
 function buildRecipeAlterationSuggestions(recipe) {
@@ -243,8 +789,21 @@ function renderComplexityButtons() {
     .map(
       (complexity) => `
         <button class="complexity-chip ${complexity.id === state.selectedComplexity ? "active" : ""}" data-complexity="${complexity.id}">
-          <strong>${complexity.label}</strong><br>
+          <strong>${complexity.label}</strong>
           <span>${complexity.description}</span>
+        </button>
+      `
+    )
+    .join("");
+}
+
+function renderDietButtons() {
+  elements.dietButtons.innerHTML = diets
+    .map(
+      (diet) => `
+        <button class="complexity-chip ${diet.id === state.selectedDiet ? "active" : ""}" data-diet="${diet.id}">
+          <strong>${diet.label}</strong><br>
+          <span>${diet.description}</span>
         </button>
       `
     )
@@ -258,9 +817,24 @@ function attachEventListeners() {
     state.selectedComplexity = button.dataset.complexity;
     renderComplexityButtons();
     renderPromptSuggestions();
+    if (getActiveScreen() === "explore") renderExploreVision();
+  });
+
+  elements.dietButtons.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-diet]");
+    if (!button) return;
+    state.selectedDiet = button.dataset.diet;
+    renderDietButtons();
+    renderPromptSuggestions();
+    if (getActiveScreen() === "explore") renderExploreVision();
   });
 
   elements.generateButton.addEventListener("click", runRecipeSearch);
+  elements.exploreBackButton?.addEventListener("click", () => showScreen("landing"));
+  elements.exploreZoomInButton?.addEventListener("click", () => setExploreZoom(state.exploreZoom + 0.18));
+  elements.exploreZoomOutButton?.addEventListener("click", () => setExploreZoom(state.exploreZoom - 0.18));
+  elements.exploreZoomResetButton?.addEventListener("click", () => setExploreZoom(1));
+  elements.resultsHomeButton.addEventListener("click", () => showScreen("landing"));
   elements.submitAlterButton.addEventListener("click", submitRecipeAlteration);
   elements.previousRecipeButton.addEventListener("click", () => moveRecipeIndex(-1));
   elements.nextRecipeButton.addEventListener("click", () => moveRecipeIndex(1));
@@ -281,11 +855,19 @@ function attachEventListeners() {
     const action = event.target.closest("[data-action]");
     if (action) handleAction(action.dataset.action, action.dataset.recipeId);
 
-    const suggestion = event.target.closest("[data-prompt-suggestion]");
-    if (suggestion) {
-      elements.vibeInput.value = suggestion.dataset.promptSuggestion;
-      elements.vibeInput.focus();
+    const screenNav = event.target.closest("[data-nav-screen]");
+    if (screenNav) {
+      showScreen(screenNav.dataset.navScreen);
+      if (screenNav.dataset.navScreen === "explore") {
+        renderExploreVision();
+        window.setTimeout(centerExploreViewport, 0);
+      }
     }
+
+    const suggestion = event.target.closest("[data-prompt-suggestion]");
+      if (suggestion) {
+        animatePromptIntoInput(suggestion.dataset.promptSuggestion);
+      }
 
     const alterSuggestion = event.target.closest("[data-alter-suggestion]");
     if (alterSuggestion) {
@@ -300,12 +882,15 @@ function attachEventListeners() {
       renderRecipeDeck();
     }
 
-    const closeModal = event.target.closest("[data-close-modal]");
+      const closeModal = event.target.closest("[data-close-modal]");
     if (closeModal) document.getElementById(closeModal.dataset.closeModal).classList.add("hidden");
     if (event.target.classList.contains("modal-backdrop")) event.target.classList.add("hidden");
   });
 
   document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+      }
+
     if (getActiveScreen() === "cook" && event.key === "Escape") {
       showScreen("results");
       return;
@@ -328,36 +913,562 @@ function attachEventListeners() {
     if (event.key === "ArrowLeft") moveRecipeIndex(-1);
     if (event.key === "ArrowRight") moveRecipeIndex(1);
   });
-}
 
-function renderPromptSuggestions() {
-  const promptSuggestions = getActivePromptSuggestions();
-  const marqueeSuggestions = [...promptSuggestions, ...promptSuggestions];
-  elements.promptSuggestions.innerHTML = marqueeSuggestions
-    .map(
-      (suggestion, index) => `<button class="prompt-suggestion-chip" data-prompt-suggestion="${suggestion}" aria-label="Use suggestion ${suggestion}" ${index >= promptSuggestions.length ? 'tabindex="-1" aria-hidden="true"' : ""}>${suggestion}</button>`
-    )
-    .join("");
-}
+  const exploreFrame = elements.exploreVisionGrid?.parentElement;
+  exploreFrame?.addEventListener("pointerdown", (event) => {
+    if (event.target.closest(".explore-vision-tile")) return;
+    state.exploreDragging = true;
+    state.exploreDragStartX = event.clientX;
+    state.exploreDragStartY = event.clientY;
+    state.exploreScrollStartLeft = exploreFrame.scrollLeft;
+    state.exploreScrollStartTop = exploreFrame.scrollTop;
+    exploreFrame.classList.add("explore-dragging");
+  });
 
-function startPromptPlaceholderRotation() {
-  let suggestionIndex = 0;
-  let lastComplexity = state.selectedComplexity;
+  document.addEventListener("pointermove", (event) => {
+    if (!state.exploreDragging || !exploreFrame) return;
+    exploreFrame.scrollLeft = state.exploreScrollStartLeft - (event.clientX - state.exploreDragStartX);
+    exploreFrame.scrollTop = state.exploreScrollStartTop - (event.clientY - state.exploreDragStartY);
+  });
 
-  const updatePlaceholder = () => {
-    const promptSuggestions = getActivePromptSuggestions();
-    if (lastComplexity !== state.selectedComplexity) {
-      suggestionIndex = 0;
-      lastComplexity = state.selectedComplexity;
+  document.addEventListener("pointerup", () => {
+    state.exploreDragging = false;
+    exploreFrame?.classList.remove("explore-dragging");
+  });
+
+  exploreFrame?.addEventListener("wheel", (event) => {
+    if (!event.ctrlKey) return;
+    event.preventDefault();
+    setExploreZoom(state.exploreZoom + (event.deltaY < 0 ? 0.12 : -0.12));
+  }, { passive: false });
+
+  elements.recipeDeck?.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+    if (event.target.closest("button, a, input, textarea, label")) return;
+    if (getActiveScreen() !== "results") return;
+    state.recipeSwipePointerId = event.pointerId;
+    state.recipeSwipeStartX = event.clientX;
+    state.recipeSwipeStartY = event.clientY;
+    state.recipeSwipeDeltaX = 0;
+    state.recipeSwipeTracking = true;
+  });
+
+  elements.recipeDeck?.addEventListener("pointermove", (event) => {
+    if (!state.recipeSwipeTracking || event.pointerId !== state.recipeSwipePointerId) return;
+    const deltaX = event.clientX - state.recipeSwipeStartX;
+    const deltaY = event.clientY - state.recipeSwipeStartY;
+    if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 18) {
+      resetRecipeSwipeState();
+      return;
     }
-    if (!elements.vibeInput.value.trim()) {
-      elements.vibeInput.placeholder = `Examples: ${promptSuggestions[suggestionIndex]}...`;
-      suggestionIndex = (suggestionIndex + 1) % promptSuggestions.length;
+    state.recipeSwipeDeltaX = deltaX;
+    const card = elements.recipeDeck.querySelector(".recipe-card");
+    if (!card) return;
+    card.classList.add("recipe-card-dragging");
+    const rotation = clamp(deltaX / 24, -8, 8);
+    card.style.transform = `translateX(${deltaX}px) rotate(${rotation}deg)`;
+    card.style.opacity = `${clamp(1 - (Math.abs(deltaX) / 420), 0.72, 1)}`;
+  });
+
+  const finishRecipeSwipe = (event) => {
+    if (!state.recipeSwipeTracking || event.pointerId !== state.recipeSwipePointerId) return;
+    const deltaX = state.recipeSwipeDeltaX;
+    const shouldSwipe = Math.abs(deltaX) > 72;
+    const card = elements.recipeDeck.querySelector(".recipe-card");
+    if (card) {
+      card.classList.remove("recipe-card-dragging");
+      card.style.transform = "";
+      card.style.opacity = "";
+    }
+    resetRecipeSwipeState();
+    if (shouldSwipe) {
+      moveRecipeIndex(deltaX < 0 ? 1 : -1);
     }
   };
 
-  updatePlaceholder();
-  window.setInterval(updatePlaceholder, 2600);
+  elements.recipeDeck?.addEventListener("pointerup", finishRecipeSwipe);
+  elements.recipeDeck?.addEventListener("pointercancel", finishRecipeSwipe);
+}
+
+function renderPromptSuggestions() {
+  if (!elements.promptSuggestionsTop || !elements.promptSuggestionsBottom) return;
+  const promptSuggestions = getActivePromptSuggestions();
+  const startIndex = Math.floor(Math.random() * Math.max(promptSuggestions.length, 1));
+  const orderedSuggestions = [...promptSuggestions.slice(startIndex), ...promptSuggestions.slice(0, startIndex)];
+  const firstRow = buildStableSuggestionRow(orderedSuggestions.filter((_, index) => index % 2 === 0));
+  const secondRow = buildStableSuggestionRow(orderedSuggestions.filter((_, index) => index % 2 === 1));
+  const renderRow = (suggestions, directionClass) => {
+    const markup = suggestions
+      .map(
+        (suggestion) => `<button class="prompt-suggestion-chip" data-prompt-suggestion="${suggestion}" aria-label="Use suggestion ${suggestion}" type="button">${suggestion}</button>`
+      )
+      .join("");
+    return `
+      <div class="treadmill-row ${directionClass}">
+        <div class="treadmill-rail">
+          <div class="treadmill-track">${markup}</div>
+          <div class="treadmill-track" aria-hidden="true">${markup}</div>
+        </div>
+      </div>
+    `;
+  };
+
+  elements.promptSuggestionsTop.innerHTML = renderRow(firstRow.length ? firstRow : orderedSuggestions, "treadmill-left");
+  elements.promptSuggestionsBottom.innerHTML = renderRow(secondRow.length ? secondRow : orderedSuggestions, "treadmill-right");
+}
+
+function buildStableSuggestionRow(suggestions) {
+  const base = suggestions.filter(Boolean);
+  if (!base.length) return [];
+
+  const minItems = 16;
+  const targetChars = 360;
+  const expanded = [];
+  let charCount = 0;
+  let index = 0;
+
+  while (expanded.length < minItems || charCount < targetChars) {
+    const suggestion = base[index % base.length];
+    expanded.push(suggestion);
+    charCount += suggestion.length;
+    index += 1;
+    if (base.length === 1 && expanded.length >= minItems && charCount >= targetChars) break;
+  }
+
+  return expanded;
+}
+
+function startPromptPlaceholderRotation() {
+  elements.vibeInput.placeholder = "Enter any vibe you have in mind...";
+}
+
+function renderExploreVision() {
+  if (!elements.exploreVisionGrid) return;
+  const recipes = pickExploreRecipes(state.recipes);
+  const projectionById = state.exploreProjection || {};
+  const complexityMatchScore = new Map(
+    recipes.map((recipe) => {
+      const requestedScore = getComplexityScore(state.selectedComplexity);
+      const recipeScore = getComplexityScore(recipe.complexity);
+      return [recipe.id, Math.abs(recipeScore - requestedScore)];
+    })
+  );
+
+  if (elements.exploreVisionSummary) {
+    const complexityLabel = complexities.find((item) => item.id === state.selectedComplexity)?.label || "Balanced";
+    const dietLabel = diets.find((item) => item.id === state.selectedDiet)?.label || "Anything";
+    elements.exploreVisionSummary.textContent = `${recipes.length} dishes · ${complexityLabel} · ${dietLabel}`;
+  }
+
+  elements.exploreVisionGrid.innerHTML = recipes
+    .map((recipe) => {
+      const point = projectionById[recipe.id] || { x: 0.5, y: 0.5 };
+      const difference = complexityMatchScore.get(recipe.id) ?? 0;
+      const size = difference === 0 ? 84 : difference === 1 ? 72 : 64;
+      const tilt = hashToRange(recipe.id, -3.5, 3.5);
+      const zIndex = Math.round(100 + ((1 - point.y) * 40) + (difference === 0 ? 12 : 0));
+      return `
+      <button
+        class="explore-vision-tile"
+        type="button"
+        data-action="details"
+        data-recipe-id="${recipe.id}"
+        aria-label="View ${escapeHtml(recipe.title)}"
+        title="${escapeHtml(recipe.title)}"
+        style="left:${(point.x * 100).toFixed(2)}%;top:${(point.y * 100).toFixed(2)}%;width:${size}px;height:${size}px;transform:translate(-50%,-50%) rotate(${tilt.toFixed(2)}deg);z-index:${zIndex};"
+      >
+        <img
+          class="explore-vision-thumb"
+          src="${recipe.thumbnail}"
+          alt="${escapeHtml(recipe.title)}"
+          onerror="${getThumbnailFallbackAttribute()}"
+        />
+        <span class="explore-vision-overlay">
+          <span class="explore-vision-title">${escapeHtml(recipe.title)}</span>
+          <span class="explore-vision-sub">${escapeHtml(recipe.cuisine || recipe.complexityLabel)}</span>
+        </span>
+      </button>
+    `;
+    })
+    .join("");
+}
+
+function pickExploreRecipes(recipes) {
+  const dietConstrained = constrainRecipesByDiet(recipes, state.selectedDiet);
+  if (state.selectedComplexity) {
+    return [...dietConstrained].sort((a, b) => {
+      const requestedScore = getComplexityScore(state.selectedComplexity);
+      const deltaA = Math.abs(getComplexityScore(a.complexity) - requestedScore);
+      const deltaB = Math.abs(getComplexityScore(b.complexity) - requestedScore);
+      if (deltaA !== deltaB) return deltaA - deltaB;
+      return a.title.localeCompare(b.title);
+    });
+  }
+  return dietConstrained;
+}
+
+function buildExploreProjection(recipes) {
+  const embeddedRecipes = recipes.filter((recipe) => Array.isArray(recipe.embedding) && recipe.embedding.length);
+  if (embeddedRecipes.length < 3) {
+    return Object.fromEntries(recipes.map((recipe, index) => [recipe.id, {
+      x: ((index % 12) + 1) / 13,
+      y: (Math.floor(index / 12) + 1) / (Math.ceil(recipes.length / 12) + 1)
+    }]));
+  }
+
+  const dimensions = embeddedRecipes[0].embedding.length;
+  const mean = new Array(dimensions).fill(0);
+  embeddedRecipes.forEach((recipe) => {
+    recipe.embedding.forEach((value, index) => {
+      mean[index] += value;
+    });
+  });
+  for (let index = 0; index < dimensions; index += 1) {
+    mean[index] /= embeddedRecipes.length;
+  }
+
+  const centeredVectors = embeddedRecipes.map((recipe) => recipe.embedding.map((value, index) => value - mean[index]));
+  const covarianceMultiply = (vector) => {
+    const projected = centeredVectors.map((row) => dotProduct(row, vector));
+    const result = new Array(dimensions).fill(0);
+    for (let rowIndex = 0; rowIndex < centeredVectors.length; rowIndex += 1) {
+      const row = centeredVectors[rowIndex];
+      const scale = projected[rowIndex];
+      for (let columnIndex = 0; columnIndex < dimensions; columnIndex += 1) {
+        result[columnIndex] += row[columnIndex] * scale;
+      }
+    }
+    return result;
+  };
+
+  const firstAxis = powerIterate(covarianceMultiply, dimensions);
+  const secondAxis = powerIterate(covarianceMultiply, dimensions, [firstAxis]);
+
+  const rawPoints = embeddedRecipes.map((recipe, index) => {
+    const x = dotProduct(centeredVectors[index], firstAxis);
+    const y = dotProduct(centeredVectors[index], secondAxis);
+    return { id: recipe.id, x, y };
+  });
+
+  const xs = rawPoints.map((point) => point.x);
+  const ys = rawPoints.map((point) => point.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const spreadX = maxX - minX || 1;
+  const spreadY = maxY - minY || 1;
+
+  return Object.fromEntries(
+    rawPoints.map((point) => {
+      const jitterX = hashToRange(`${point.id}-x`, -0.016, 0.016);
+      const jitterY = hashToRange(`${point.id}-y`, -0.016, 0.016);
+      return [
+        point.id,
+        {
+          x: clamp(0.05 + (((point.x - minX) / spreadX) * 0.9) + jitterX, 0.04, 0.96),
+          y: clamp(0.06 + (((point.y - minY) / spreadY) * 0.88) + jitterY, 0.05, 0.95)
+        }
+      ];
+    })
+  );
+}
+
+function powerIterate(multiply, dimensions, orthogonalAxes = []) {
+  let vector = new Array(dimensions).fill(0).map((_, index) => Math.sin(index + 1));
+  vector = normalizeVector(vector);
+
+  for (let iteration = 0; iteration < 18; iteration += 1) {
+    let nextVector = multiply(vector);
+    orthogonalAxes.forEach((axis) => {
+      const projection = dotProduct(nextVector, axis);
+      for (let index = 0; index < dimensions; index += 1) {
+        nextVector[index] -= projection * axis[index];
+      }
+    });
+    vector = normalizeVector(nextVector);
+  }
+
+  return vector;
+}
+
+function normalizeVector(vector) {
+  const magnitude = Math.sqrt(vector.reduce((sum, value) => sum + (value * value), 0)) || 1;
+  return vector.map((value) => value / magnitude);
+}
+
+function dotProduct(left, right) {
+  let total = 0;
+  for (let index = 0; index < left.length; index += 1) {
+    total += left[index] * right[index];
+  }
+  return total;
+}
+
+function hashToRange(value, min, max) {
+  let hash = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    hash = ((hash << 5) - hash) + value.charCodeAt(index);
+    hash |= 0;
+  }
+  const normalized = ((hash >>> 0) % 10000) / 10000;
+  return min + ((max - min) * normalized);
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function renderExploreVision() {
+  if (!elements.exploreVisionGrid) return;
+  const islands = buildExploreIslands(state.recipes);
+  const totalRecipes = islands.reduce((sum, island) => sum + island.recipes.length, 0);
+
+  if (elements.exploreVisionSummary) {
+    const complexityLabel = complexities.find((item) => item.id === state.selectedComplexity)?.label || "Balanced";
+    const dietLabel = diets.find((item) => item.id === state.selectedDiet)?.label || "Anything";
+    elements.exploreVisionSummary.textContent = `${totalRecipes} dishes | ${islands.length} islands | ${complexityLabel} | ${dietLabel}`;
+  }
+
+  elements.exploreVisionGrid.innerHTML = islands.map((island, islandIndex) => `
+    <section class="explore-island" style="left:${island.cx}px;top:${island.cy}px;width:${island.width}px;height:${island.height}px;">
+      <div class="explore-island-backdrop"></div>
+      <div class="explore-island-label">
+        <span class="explore-island-kicker">Island ${islandIndex + 1}</span>
+        <h3>${escapeHtml(island.label)}</h3>
+      </div>
+      ${island.recipes.map((recipe, recipeIndex) => {
+        const difference = Math.abs(getComplexityScore(recipe.complexity) - getComplexityScore(state.selectedComplexity));
+        const size = difference === 0 ? 72 : difference === 1 ? 64 : 58;
+        const localPosition = computeIslandTilePosition(recipeIndex, island.recipes.length, island.width, island.height);
+        const tilt = hashToRange(recipe.id, -4.2, 4.2);
+        return `
+          <button
+            class="explore-vision-tile"
+            type="button"
+            data-action="details"
+            data-recipe-id="${recipe.id}"
+            aria-label="View ${escapeHtml(recipe.title)}"
+            title="${escapeHtml(recipe.title)}"
+            style="left:${localPosition.x}px;top:${localPosition.y}px;width:${size}px;height:${size}px;--tile-rotate:${tilt.toFixed(2)}deg;z-index:${80 + recipeIndex};"
+          >
+            <img
+              class="explore-vision-thumb"
+              src="${recipe.thumbnail}"
+              alt="${escapeHtml(recipe.title)}"
+              onerror="${getThumbnailFallbackAttribute()}"
+            />
+            <span class="explore-vision-overlay">
+              <span class="explore-vision-title">${escapeHtml(recipe.title)}</span>
+              <span class="explore-vision-sub">${escapeHtml(recipe.cuisine || recipe.complexityLabel)}</span>
+            </span>
+          </button>
+        `;
+      }).join("")}
+    </section>
+  `).join("");
+
+  updateExploreSurfaceScale();
+}
+
+function pickExploreRecipes(recipes) {
+  const dietConstrained = constrainRecipesByDiet(recipes, state.selectedDiet);
+  const ranked = [...dietConstrained].sort((a, b) => {
+    const requestedScore = getComplexityScore(state.selectedComplexity);
+    const deltaA = Math.abs(getComplexityScore(a.complexity) - requestedScore);
+    const deltaB = Math.abs(getComplexityScore(b.complexity) - requestedScore);
+    if (deltaA !== deltaB) return deltaA - deltaB;
+    const qualityDelta = scoreExploreRecipe(b) - scoreExploreRecipe(a);
+    if (qualityDelta !== 0) return qualityDelta;
+    return a.title.localeCompare(b.title);
+  });
+  return curateExploreRecipes(ranked, 75);
+}
+
+function scoreExploreRecipe(recipe) {
+  const complexityWeight = {
+    balanced: 10,
+    challenging: 8,
+    lazy: 6
+  }[recipe.complexity] || 0;
+
+  const tagWeight = Math.min(6, (recipe.moodTags || []).length);
+  const stepWeight = Math.min(6, (recipe.steps || []).length);
+  const summaryWeight = Math.min(6, Math.round((recipe.summary || "").length / 28));
+
+  return complexityWeight + tagWeight + stepWeight + summaryWeight;
+}
+
+function curateExploreRecipes(recipes, limit = 75) {
+  const byCuisine = new Map();
+  recipes.forEach((recipe) => {
+    const cuisineKey = ((recipe.cuisine || "Other").split(/[,/-]/)[0] || "Other").trim();
+    if (!byCuisine.has(cuisineKey)) byCuisine.set(cuisineKey, []);
+    byCuisine.get(cuisineKey).push(recipe);
+  });
+
+  const cuisinePools = [...byCuisine.values()];
+  const curated = [];
+  let cursor = 0;
+
+  while (curated.length < limit && cuisinePools.some((pool) => pool.length)) {
+    const pool = cuisinePools[cursor % cuisinePools.length];
+    const recipe = pool.shift();
+    if (recipe) curated.push(recipe);
+    cursor += 1;
+  }
+
+  return curated;
+}
+
+function buildExploreIslands(recipes) {
+  const curatedRecipes = pickExploreRecipes(recipes);
+  const clustered = buildIslandAssignments(curatedRecipes);
+  const anchors = [
+    { x: 300, y: 250 },
+    { x: 740, y: 210 },
+    { x: 1180, y: 250 },
+    { x: 1620, y: 220 },
+    { x: 440, y: 650 },
+    { x: 900, y: 690 },
+    { x: 1360, y: 650 },
+    { x: 1820, y: 690 },
+    { x: 320, y: 1060 },
+    { x: 800, y: 1100 },
+    { x: 1280, y: 1060 },
+    { x: 1760, y: 1100 }
+  ];
+
+  return clustered.map((cluster, index) => {
+    const rows = Math.ceil(cluster.recipes.length / 5);
+    const width = 330 + Math.min(180, cluster.recipes.length * 10);
+    const height = 240 + (rows * 78);
+    return {
+      ...cluster,
+      cx: anchors[index % anchors.length].x,
+      cy: anchors[index % anchors.length].y,
+      width,
+      height
+    };
+  });
+}
+
+function buildIslandAssignments(recipes) {
+  const usedIds = new Set();
+  const islands = exploreIslandBlueprints.map((blueprint) => {
+    const scoredRecipes = recipes
+      .map((recipe) => ({ recipe, score: scoreRecipeForIsland(recipe, blueprint) }))
+      .filter(({ score }) => score >= 2)
+      .sort((a, b) => b.score - a.score || scoreExploreRecipe(b.recipe) - scoreExploreRecipe(a.recipe));
+
+    const selected = [];
+    for (const entry of scoredRecipes) {
+      if (selected.length >= blueprint.targetCount) break;
+      if (usedIds.has(entry.recipe.id)) continue;
+      selected.push(entry.recipe);
+      usedIds.add(entry.recipe.id);
+    }
+
+    return {
+      id: blueprint.id,
+      label: blueprint.label,
+      vibe: blueprint.vibe,
+      recipes: selected
+    };
+  });
+
+  islands.forEach((island, index) => {
+    if (island.recipes.length >= exploreIslandBlueprints[index].targetCount) return;
+    const blueprint = exploreIslandBlueprints[index];
+    const fallbackPool = recipes
+      .filter((recipe) => !usedIds.has(recipe.id))
+      .map((recipe) => ({ recipe, score: scoreRecipeForIsland(recipe, blueprint) }))
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score || scoreExploreRecipe(b.recipe) - scoreExploreRecipe(a.recipe));
+
+    for (const entry of fallbackPool) {
+      if (island.recipes.length >= blueprint.targetCount) break;
+      island.recipes.push(entry.recipe);
+      usedIds.add(entry.recipe.id);
+    }
+  });
+
+  return islands.filter((island) => island.recipes.length).map((island) => ({
+    ...island,
+    recipes: island.recipes.sort((a, b) => a.title.localeCompare(b.title))
+  }));
+}
+
+function scoreRecipeForIsland(recipe, blueprint) {
+  const haystack = [
+    recipe.title || "",
+    recipe.summary || "",
+    recipe.cuisine || "",
+    recipe.complexity || "",
+    recipe.complexityLabel || "",
+    ...(recipe.moodTags || []),
+    ...(recipe.ingredients || [])
+  ].join(" ").toLowerCase();
+
+  if ((blueprint.exclude || []).some((term) => haystack.includes(term))) {
+    return -999;
+  }
+
+  let score = 0;
+  (blueprint.include || []).forEach((term) => {
+    if (haystack.includes(term)) score += 1;
+  });
+
+  if (recipe.diet === "vegan" && blueprint.id === "plant-rich") score += 3;
+  if (recipe.diet === "vegetarian" && blueprint.id === "vegetarian-comfort") score += 2;
+  if (recipe.diet === "pescatarian" && blueprint.id === "sea-coast") score += 3;
+  if (recipe.complexity === "challenging" && blueprint.id === "weekend-showpiece") score += 2;
+
+  return score;
+}
+
+function computeIslandTilePosition(index, total, width, height) {
+  const centerX = width / 2;
+  const centerY = (height / 2) + 20;
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+  const maxRadius = Math.min(width, height) * 0.37;
+  const radius = maxRadius * Math.sqrt((index + 0.42) / Math.max(total, 1));
+  const angle = (index * goldenAngle) + hashToRange(`ia-${index}`, -0.08, 0.08);
+  return {
+    x: centerX + (Math.cos(angle) * radius),
+    y: centerY + (Math.sin(angle) * radius)
+  };
+}
+
+function setExploreZoom(nextZoom) {
+  state.exploreZoom = clamp(nextZoom, 0.7, 1.8);
+  updateExploreSurfaceScale();
+}
+
+function updateExploreSurfaceScale() {
+  if (!elements.exploreVisionGrid) return;
+  const baseWidth = 2480;
+  const baseHeight = 1680;
+  elements.exploreVisionGrid.style.width = `${Math.round(baseWidth * state.exploreZoom)}px`;
+  elements.exploreVisionGrid.style.height = `${Math.round(baseHeight * state.exploreZoom)}px`;
+  if (elements.exploreZoomResetButton) {
+    elements.exploreZoomResetButton.textContent = `${Math.round(state.exploreZoom * 100)}%`;
+  }
+}
+
+function centerExploreViewport() {
+  const frame = elements.exploreVisionGrid?.parentElement;
+  if (!frame) return;
+  frame.scrollLeft = Math.max(0, (frame.scrollWidth - frame.clientWidth) / 2);
+  frame.scrollTop = Math.max(0, (frame.scrollHeight - frame.clientHeight) / 2 - 60);
+}
+
+function resetRecipeSwipeState() {
+  state.recipeSwipePointerId = null;
+  state.recipeSwipeStartX = 0;
+  state.recipeSwipeStartY = 0;
+  state.recipeSwipeDeltaX = 0;
+  state.recipeSwipeTracking = false;
 }
 
 async function runRecipeSearch() {
@@ -380,22 +1491,31 @@ function buildSearchProfile() {
     queryText: state.vibe,
     semanticQuery: state.vibe,
     filters: {
-      complexity: state.selectedComplexity
+      complexity: state.selectedComplexity,
+      diet: state.selectedDiet
     }
   };
 }
 
 async function rankRecipesSmart(recipes, profile) {
-  const constrainedRecipes = constrainRecipesByComplexity(recipes, profile.filters.complexity);
+  const constrainedRecipes = constrainRecipesByDiet(recipes, profile.filters.diet);
   const embeddingRanked = await rankRecipesWithEmbeddings(constrainedRecipes, profile);
   if (embeddingRanked) return embeddingRanked;
   return rankRecipesLexically(constrainedRecipes, profile);
 }
 
+function constrainRecipesByDiet(recipes, selectedDiet) {
+  if (selectedDiet === "any") return recipes;
+  if (selectedDiet === "pescatarian") return recipes.filter((recipe) => recipe.diet === "pescatarian" || recipe.diet === "vegetarian" || recipe.diet === "vegan");
+  if (selectedDiet === "vegetarian") return recipes.filter((recipe) => recipe.diet === "vegetarian" || recipe.diet === "vegan");
+  if (selectedDiet === "vegan") return recipes.filter((recipe) => recipe.diet === "vegan");
+  return recipes;
+}
+
 function constrainRecipesByComplexity(recipes, selectedComplexity) {
   const targetScore = getComplexityScore(selectedComplexity);
   const exactMatches = recipes.filter((recipe) => getComplexityScore(recipe.complexity) === targetScore);
-  if (exactMatches.length >= 18 || exactMatches.length === recipes.length) return exactMatches;
+  if (exactMatches.length >= 18) return exactMatches;
 
   const nearbyMatches = recipes.filter((recipe) => Math.abs(getComplexityScore(recipe.complexity) - targetScore) <= 1);
   if (nearbyMatches.length) return nearbyMatches;
@@ -414,6 +1534,7 @@ async function rankRecipesWithEmbeddings(recipes, profile) {
     return [...recipes]
       .map((recipe) => ({
         ...recipe,
+        difficultyContextBadge: getDifficultyContextBadge(profile.filters.complexity, recipe.complexity),
         rankScore: rankRecipeScore(recipe, profile.filters, cosineSimilarityFromArrays(queryEmbedding, recipe.embedding || []))
       }))
       .sort((a, b) => b.rankScore - a.rankScore);
@@ -457,6 +1578,7 @@ function rankRecipesLexically(recipes, profile) {
       const lexicalScore = queryTokens.length ? cosineSimilarity(vectorize(queryTokens), vectorize(textTokens)) : 0;
       return {
         ...recipe,
+        difficultyContextBadge: getDifficultyContextBadge(profile.filters.complexity, recipe.complexity),
         rankScore: rankRecipeScore(recipe, profile.filters, lexicalScore)
       };
     })
@@ -464,11 +1586,28 @@ function rankRecipesLexically(recipes, profile) {
 }
 
 function rankRecipeScore(recipe, filters, semanticScore) {
-  const complexityPenalty = Math.abs(getComplexityScore(filters.complexity) - getComplexityScore(recipe.complexity));
-  const exactMatchBonus = complexityPenalty === 0 ? 18 : 0;
-  let score = semanticScore * 100 + exactMatchBonus - complexityPenalty * 42;
+  const dietPreferenceBonus = getDietPreferenceBonus(filters.diet, recipe.diet);
+  const complexityDistance = Math.abs(getComplexityScore(filters.complexity) - getComplexityScore(recipe.complexity));
+  const complexityBonus = complexityDistance === 0 ? 16 : complexityDistance === 1 ? -3 : -9;
+  let score = semanticScore * 100 + complexityBonus + dietPreferenceBonus;
   score += Math.random() * 0.6;
   return score;
+}
+
+function getDietPreferenceBonus(selectedDiet, recipeDiet) {
+  return dietPreferenceWeights[selectedDiet]?.[recipeDiet] ?? 0;
+}
+
+function getDifficultyContextBadge(selectedComplexity, recipeComplexity) {
+  const selectedScore = getComplexityScore(selectedComplexity);
+  const recipeScore = getComplexityScore(recipeComplexity);
+  const difference = recipeScore - selectedScore;
+
+  if (difference === 1) return "Pushing your boundaries";
+  if (difference >= 2) return "A stretch pick";
+  if (difference === -1) return "Keeping it easy";
+  if (difference <= -2) return "Very approachable";
+  return "";
 }
 
 function vectorize(tokens) {
@@ -533,6 +1672,7 @@ function expandTokens(tokens) {
 
 
 function renderRecipeDeck() {
+  renderResultsHeading();
   if (!state.rankedRecipes.length) {
     elements.recipeDeck.innerHTML = `<div class="recipe-card"><h3>No matches yet</h3><p class="recipe-summary">Try loosening one or two filters, or keep the filters and change the vibe text.</p></div>`;
     elements.recipeDots.innerHTML = "";
@@ -542,6 +1682,48 @@ function renderRecipeDeck() {
   const recipe = state.rankedRecipes[state.currentCardIndex];
   elements.recipeDeck.innerHTML = createRecipeCardMarkup(recipe, state.recipeNavDirection);
   renderRecipeDots();
+}
+
+function renderResultsHeading() {
+  if (!elements.resultsHeading) return;
+  const vibe = state.vibe.trim();
+  if (vibe) {
+    elements.resultsHeading.innerHTML = `Best matches for <span class="results-heading-emphasis">‘${escapeHtml(vibe)}’</span>`;
+    return;
+  }
+
+  const complexityLabel = complexities.find((item) => item.id === state.selectedComplexity)?.label || "Balanced";
+  const dietLabel = diets.find((item) => item.id === state.selectedDiet)?.label || "Anything";
+  elements.resultsHeading.textContent = `Best matches for ${complexityLabel} + ${dietLabel}`;
+}
+
+function animatePromptIntoInput(promptText) {
+  if (!elements.vibeInput) return;
+  if (state.promptTypingTimer) {
+    window.clearTimeout(state.promptTypingTimer);
+    state.promptTypingTimer = null;
+  }
+
+  elements.vibeInput.focus();
+  elements.vibeInput.value = "";
+
+  let index = 0;
+  const typeNext = () => {
+    elements.vibeInput.value = promptText.slice(0, index);
+    elements.vibeInput.setSelectionRange(index, index);
+
+    if (index >= promptText.length) {
+      state.promptTypingTimer = null;
+      return;
+    }
+
+    index += 1;
+    const character = promptText[index - 1];
+    const delay = character === " " ? 12 : 16 + Math.floor(Math.random() * 12);
+    state.promptTypingTimer = window.setTimeout(typeNext, delay);
+  };
+
+  typeNext();
 }
 
 function renderRecipeDots() {
@@ -573,6 +1755,7 @@ function createRecipeCardMarkup(recipe, direction) {
           <span class="tag">${recipe.complexityLabel}</span>
           <span class="tag">${state.currentCardIndex + 1} / ${state.rankedRecipes.length}</span>
           ${recipe.altered ? `<span class="recipe-altered-badge">Recipe altered</span>` : ""}
+          ${recipe.difficultyContextBadge ? `<span class="recipe-context-badge">${recipe.difficultyContextBadge}</span>` : ""}
         </div>
         <div class="card-actions-quiet">
           <button class="mini-button" data-action="save" data-recipe-id="${recipe.id}">${state.savedRecipeIds.includes(recipe.id) ? "Unsave" : "Save"}</button>
@@ -583,6 +1766,11 @@ function createRecipeCardMarkup(recipe, direction) {
           <p class="eyebrow">Curated recipe</p>
           <h3>${recipe.title}</h3>
           <p class="recipe-summary">${recipe.summary}</p>
+          <div class="facts-grid">
+            <div class="fact"><span class="fact-label">Prep</span>${recipe.prepTime} mins</div>
+            <div class="fact"><span class="fact-label">Cook</span>${recipe.cookTime} mins</div>
+            <div class="fact"><span class="fact-label">Serves</span>${recipe.servings}</div>
+          </div>
         </div>
         <div class="card-side">
           ${
@@ -594,19 +1782,12 @@ function createRecipeCardMarkup(recipe, direction) {
               `
               : ""
           }
-          <div class="facts-grid">
-            <div class="fact"><span class="fact-label">Prep</span>${recipe.prepTime} mins</div>
-            <div class="fact"><span class="fact-label">Cook</span>${recipe.cookTime} mins</div>
-            <div class="fact"><span class="fact-label">Serves</span>${recipe.servings}</div>
-            <div class="fact"><span class="fact-label">Energy</span>${recipe.estimatedCalories} kcal</div>
-          </div>
         </div>
       </div>
       <div class="recipe-actions">
         <button class="mini-button" data-action="details" data-recipe-id="${recipe.id}">View</button>
         <button class="mini-button" data-action="shopping" data-recipe-id="${recipe.id}">Shopping list</button>
         <button class="mini-button" data-action="alter" data-recipe-id="${recipe.id}">✦ Alter recipe ✦</button>
-        <button class="mini-button" data-action="saved" data-recipe-id="${recipe.id}">Saved</button>
         <button class="primary-button" data-action="cook" data-recipe-id="${recipe.id}">Cook.</button>
       </div>
     </article>
@@ -880,11 +2061,37 @@ function startCooking(recipe) {
   state.cookStepDirection = 1;
   state.cookAnimating = false;
   updateCookScreen();
-  showScreen("cook");
+  transitionToCookScreen();
   elements.alterModal.classList.add("hidden");
   elements.detailModal.classList.add("hidden");
   elements.shoppingModal.classList.add("hidden");
   elements.savedModal.classList.add("hidden");
+}
+
+function transitionToCookScreen() {
+  const activeScreen = elements.screens.find((screen) => screen.classList.contains("screen-active"));
+  const cookScreen = elements.screens.find((screen) => screen.dataset.screen === "cook");
+
+  if (!cookScreen) {
+    showScreen("cook");
+    return;
+  }
+
+  if (!activeScreen || activeScreen === cookScreen || activeScreen.dataset.screen !== "results") {
+    showScreen("cook");
+    return;
+  }
+
+  elements.appShell?.classList.add("screen-transitioning", "screen-transitioning-cook");
+  cookScreen.classList.add("screen-active", "cook-screen-enter");
+  activeScreen.classList.add("cook-screen-exit");
+
+  window.setTimeout(() => {
+    elements.appShell?.classList.remove("screen-transitioning", "screen-transitioning-cook");
+    activeScreen.classList.remove("cook-screen-exit", "screen-active");
+    cookScreen.classList.remove("cook-screen-enter");
+    cookScreen.classList.add("screen-active");
+  }, 560);
 }
 
 function retreatCookStep() {
@@ -1076,6 +2283,14 @@ function showScreen(target) {
   elements.screens.forEach((screen) => {
     screen.classList.toggle("screen-active", screen.dataset.screen === target);
   });
+}
+
+function toTitleCase(value) {
+  return value
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 function getActiveScreen() {
