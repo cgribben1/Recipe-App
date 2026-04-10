@@ -32,6 +32,14 @@ To regenerate the cached recipe embeddings after changing the recipe cache:
 python build_recipe_embeddings.py
 ```
 
+To regenerate thumbnail prompt batches after changing the recipe cache:
+
+```powershell
+python build_thumbnail_batch.py
+```
+
+Thumbnail generation is pinned to `gpt-image-1.5` in [build_thumbnail_batch.py](./build_thumbnail_batch.py) so the image model choice is explicit rather than relying on a tool default.
+
 ## Deploy as a web app
 
 This repo is now set up for Render with GitHub auto-deploy via [render.yaml](./render.yaml).

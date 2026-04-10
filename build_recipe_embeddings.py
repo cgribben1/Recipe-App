@@ -28,6 +28,7 @@ def build_embedding_input(recipe):
         recipe["cuisine"],
         recipe["summary"],
         "Mood tags: " + ", ".join(recipe.get("moodTags", [])),
+        "Search features: " + ", ".join(recipe.get("searchFeatures", [])),
         "Ingredients: " + ", ".join(recipe.get("ingredients", [])),
         "Steps: " + " ".join(recipe.get("steps", [])),
     ]

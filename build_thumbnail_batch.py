@@ -5,6 +5,7 @@ from pathlib import Path
 
 RECIPES_PATH = Path("recipes-data.js")
 OUTPUT_PATH = Path("tmp/imagegen/recipe-thumbnails.jsonl")
+IMAGE_MODEL = "gpt-image-1.5"
 
 BASE_STYLE = {
     "use_case": "photorealistic-natural",
@@ -131,6 +132,7 @@ def main():
         for index, recipe in enumerate(recipes):
             slug = recipe.get("id") or slugify(recipe["title"])
             payload = {
+                "model": IMAGE_MODEL,
                 "prompt": prompt_for(recipe),
                 "size": "1024x1024",
                 "quality": "medium",

@@ -766,14 +766,37 @@ textarea {
   transform: translate(-50%, -50%);
 }
 
-.explore-island-backdrop {
+.explore-graph-svg {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.explore-graph-link {
+  stroke: rgba(9, 9, 9, 0.12);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 8 10;
+}
+
+.explore-graph-spoke {
+  stroke: rgba(9, 9, 9, 0.08);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.explore-island-backdrop {
+  position: absolute;
+  transform: translate(-50%, -50%);
   border-radius: 46% 54% 48% 52% / 52% 48% 56% 44%;
   background:
     radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.22) 58%, rgba(255, 255, 255, 0.06) 78%, transparent 100%);
   border: 1px solid rgba(9, 9, 9, 0.08);
   box-shadow: 0 26px 54px rgba(0, 0, 0, 0.09);
+  pointer-events: none;
 }
 
 .explore-island-label {
@@ -798,6 +821,43 @@ textarea {
   font-size: 1rem;
   line-height: 1.05;
   color: rgba(9, 9, 9, 0.92);
+}
+
+.explore-island-hub {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: grid;
+  gap: 4px;
+  min-width: 152px;
+  padding: 15px 18px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(9, 9, 9, 0.08);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  backdrop-filter: blur(10px);
+  z-index: 40;
+  transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+}
+
+.explore-island-hub strong {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.96rem;
+  line-height: 1.04;
+  color: rgba(9, 9, 9, 0.95);
+}
+
+.explore-island-count {
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(92, 92, 92, 0.78);
+}
+
+.explore-island-hub:hover {
+  transform: translate(-50%, -50%) scale(1.04);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.16);
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .explore-vision-tile {

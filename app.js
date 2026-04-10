@@ -13,18 +13,18 @@ const diets = [
 
 const dietPreferenceWeights = {
   any: {
-    meat: 24,
-    pescatarian: 16,
-    vegetarian: 8,
+    meat: 12,
+    pescatarian: 8,
+    vegetarian: 4,
     vegan: 0
   },
   pescatarian: {
-    pescatarian: 18,
-    vegetarian: 9,
+    pescatarian: 10,
+    vegetarian: 5,
     vegan: 0
   },
   vegetarian: {
-    vegetarian: 14,
+    vegetarian: 8,
     vegan: 0
   },
   vegan: {
@@ -41,6 +41,84 @@ const paletteLexicon = {
   healthy: ["light", "fresh", "greens", "clean", "vegetable"],
   noodles: ["udon", "ramen", "pasta"],
   seafood: ["fish", "prawn", "shrimp", "sea"]
+};
+
+const cuisineIntentLexicon = {
+  british: ["british", "english", "irish", "scottish", "welsh"],
+  french: ["french", "bistro", "bourguignon", "cassoulet", "marbella"],
+  italian: ["italian", "roman", "sicilian", "tuscan", "bolognese"],
+  spanish: ["spanish", "paella", "basque", "catalan"],
+  greek: ["greek", "mediterranean", "moussaka", "spanakopita"],
+  hungarian: ["hungarian", "goulash", "paprika"],
+  mexican: ["mexican", "mole", "enchilada", "taco", "pibil"],
+  caribbean: ["caribbean", "jamaican", "jerk", "oxtail"],
+  indian: ["indian", "biryani", "curry", "masala", "kofta"],
+  persian: ["persian", "saffron", "tahdig"],
+  japanese: ["japanese", "ramen", "katsu", "udon"],
+  korean: ["korean", "gochujang", "kimchi", "bulgogi"],
+  thai: ["thai", "lemongrass", "red curry", "green curry"],
+  chinese: ["chinese", "sichuan", "soy-braised", "char siu"],
+  vietnamese: ["vietnamese", "pho", "nuoc", "lemongrass"],
+  middleeastern: ["middle eastern", "levantine", "shawarma", "harissa"],
+  northafrican: ["north african", "moroccan", "tagine", "harissa"]
+};
+
+const queryIntentLexicon = {
+  onePot: {
+    feature: "one-pot",
+    strength: "hard",
+    terms: ["one-pot", "one pot", "one-pan", "one pan", "single-pot", "single pot", "single-pan", "single pan"]
+  },
+  creamy: {
+    feature: "creamy",
+    strength: "strong",
+    terms: ["creamy", "silky", "velvety"]
+  },
+  brothy: {
+    feature: "brothy",
+    strength: "strong",
+    terms: ["brothy", "broth", "soupy", "broth-y"]
+  },
+  crispy: {
+    feature: "crispy",
+    strength: "strong",
+    terms: ["crispy", "crisp", "crunchy"]
+  },
+  pasta: {
+    feature: "pasta",
+    strength: "strong",
+    terms: ["pasta", "spaghetti", "linguine", "tagliatelle", "rigatoni", "penne", "conchiglie", "ravioli", "lasagne", "lasagna", "orzo", "agnolotti"]
+  },
+  rice: {
+    feature: "rice",
+    strength: "strong",
+    terms: ["rice", "risotto", "biryani", "pilaf", "paella", "fried rice", "rice bowl"]
+  },
+  stew: {
+    feature: "stew",
+    strength: "strong",
+    terms: ["stew", "stewy", "braise", "braised", "goulash", "ragu", "tagine", "cassoulet"]
+  },
+  soup: {
+    feature: "soup",
+    strength: "hard",
+    terms: ["soup", "ramen", "bouillabaisse"]
+  },
+  salad: {
+    feature: "salad",
+    strength: "hard",
+    terms: ["salad", "slaw"]
+  },
+  roast: {
+    feature: "roast",
+    strength: "strong",
+    terms: ["roast", "roasted", "traybake", "sheet-pan", "sheet pan"]
+  },
+  spicy: {
+    feature: "spicy",
+    strength: "strong",
+    terms: ["spicy", "fiery", "chili", "chilli", "gochujang", "harissa"]
+  }
 };
 
 const promptSuggestionsByComplexity = {
@@ -533,6 +611,7 @@ function filterPromptSuggestionsByCurrentPool(suggestions) {
         recipe.summary,
         recipe.cuisine,
         recipe.moodTags.join(" "),
+        (recipe.searchFeatures || []).join(" "),
         recipe.ingredients.join(" ")
       ].join(" ")));
       const overlap = queryTokens.reduce((count, token) => count + (recipeTokens.has(token) ? 1 : 0), 0);
@@ -547,6 +626,7 @@ function buildRecipeCache() {
   return recipeBlueprints.map((recipe) => ({
     ...normalizeComplexity(recipe),
     diet: recipe.diet || inferRecipeDiet(recipe),
+    searchFeatures: recipe.searchFeatures || inferRecipeSearchFeatures(recipe),
     id: recipe.id || slugify(recipe.title),
     title: recipe.title,
     cuisine: recipe.cuisine,
@@ -584,9 +664,24 @@ function resolveApiUrl(path) {
 
 function normalizeComplexity(recipe) {
   const raw = (recipe.complexity || "").toLowerCase();
-  if (raw === "lazy" || raw === "easy") return { complexity: "lazy", complexityLabel: "Lazy" };
-  if (raw === "challenging" || raw === "project") return { complexity: "challenging", complexityLabel: "Challenging" };
-  return { complexity: "balanced", complexityLabel: "Balanced" };
+  const baseComplexity = raw === "lazy" || raw === "easy"
+    ? "lazy"
+    : raw === "medium"
+      ? "balanced"
+    : raw === "challenging" || raw === "project"
+      ? "challenging"
+      : raw === "hard"
+      ? "challenging"
+      : "balanced";
+
+  return {
+    complexity: baseComplexity,
+    complexityLabel: baseComplexity === "lazy"
+      ? "Lazy"
+      : baseComplexity === "challenging"
+        ? "Challenging"
+        : "Balanced"
+  };
 }
 
 function inferRecipeDiet(recipe) {
@@ -720,8 +815,57 @@ function inferRecipeDiet(recipe) {
 
   if ((recipe.moodTags || []).some((tag) => String(tag).toLowerCase() === "vegan")) return "vegan";
   if (veganSignals.some((signal) => haystack.includes(signal)) && !vegetarianOnlySignals.some((signal) => haystack.includes(signal))) {
-    return "vegan";
+  return "vegan";
+}
+
+function inferRecipeSearchFeatures(recipe) {
+  const haystack = [
+    recipe.title || "",
+    recipe.summary || "",
+    recipe.cuisine || "",
+    ...(recipe.moodTags || []),
+    ...(recipe.ingredients || []),
+    ...(recipe.steps || [])
+  ].join(" ").toLowerCase();
+
+  const features = new Set();
+
+  if (/(one-pot|one pot|one-pan|one pan|single pot|single-pan|skillet|traybake|sheet-pan|sheet pan)/.test(haystack)) {
+    features.add("one-pot");
   }
+  if (/(creamy|cream|silky|velvety|béchamel|bechamel|mascarpone|ricotta|burrata|parmesan cream|vodka sauce)/.test(haystack)) {
+    features.add("creamy");
+  }
+  if (/(broth|brothy|soup|stew|bouillabaisse|ramen|moilee)/.test(haystack)) {
+    features.add("brothy");
+  }
+  if (/(crispy|crisp|crunchy|fried|golden|katsu|crumb)/.test(haystack)) {
+    features.add("crispy");
+  }
+  if (/(pasta|spaghetti|linguine|tagliatelle|rigatoni|penne|conchiglie|ravioli|lasagne|lasagna|orzo|agnolotti|macaroni)/.test(haystack)) {
+    features.add("pasta");
+  }
+  if (/(rice|risotto|biryani|pilaf|paella|fried rice|rice bowl|jollof)/.test(haystack)) {
+    features.add("rice");
+  }
+  if (/(stew|braise|braised|goulash|ragu|tagine|cassoulet|bourguignon)/.test(haystack)) {
+    features.add("stew");
+  }
+  if (/(soup|broth|bouillabaisse|ramen)/.test(haystack)) {
+    features.add("soup");
+  }
+  if (/(salad|slaw|niçoise|nicoise|caesar)/.test(haystack)) {
+    features.add("salad");
+  }
+  if (/(roast|roasted|traybake|sheet-pan|sheet pan|wellington|pithivier|baked)/.test(haystack)) {
+    features.add("roast");
+  }
+  if (/(spicy|fiery|chili|chilli|gochujang|harissa|red curry|green curry|peppery)/.test(haystack)) {
+    features.add("spicy");
+  }
+
+  return [...features];
+}
 
   return "vegetarian";
 }
@@ -854,6 +998,12 @@ function attachEventListeners() {
   document.addEventListener("click", (event) => {
     const action = event.target.closest("[data-action]");
     if (action) handleAction(action.dataset.action, action.dataset.recipeId);
+
+    const focusIsland = event.target.closest("[data-focus-island]");
+    if (focusIsland) {
+      focusExploreIsland(Number(focusIsland.dataset.focusIsland));
+      return;
+    }
 
     const screenNav = event.target.closest("[data-nav-screen]");
     if (screenNav) {
@@ -1227,48 +1377,126 @@ function renderExploreVision() {
   if (elements.exploreVisionSummary) {
     const complexityLabel = complexities.find((item) => item.id === state.selectedComplexity)?.label || "Balanced";
     const dietLabel = diets.find((item) => item.id === state.selectedDiet)?.label || "Anything";
-    elements.exploreVisionSummary.textContent = `${totalRecipes} dishes | ${islands.length} islands | ${complexityLabel} | ${dietLabel}`;
+    elements.exploreVisionSummary.textContent = `${totalRecipes} dishes | ${islands.length} hubs | ${complexityLabel} | ${dietLabel}`;
   }
 
-  elements.exploreVisionGrid.innerHTML = islands.map((island, islandIndex) => `
-    <section class="explore-island" style="left:${island.cx}px;top:${island.cy}px;width:${island.width}px;height:${island.height}px;">
-      <div class="explore-island-backdrop"></div>
-      <div class="explore-island-label">
-        <span class="explore-island-kicker">Island ${islandIndex + 1}</span>
-        <h3>${escapeHtml(island.label)}</h3>
-      </div>
-      ${island.recipes.map((recipe, recipeIndex) => {
+  const graphIslands = islands.map((island, islandIndex) => {
+    const hubX = island.cx;
+    const hubY = island.cy;
+    return {
+      ...island,
+      hubX,
+      hubY,
+      recipes: island.recipes.map((recipe, recipeIndex) => {
         const difference = Math.abs(getComplexityScore(recipe.complexity) - getComplexityScore(state.selectedComplexity));
         const size = difference === 0 ? 72 : difference === 1 ? 64 : 58;
         const localPosition = computeIslandTilePosition(recipeIndex, island.recipes.length, island.width, island.height);
-        const tilt = hashToRange(recipe.id, -4.2, 4.2);
-        return `
-          <button
-            class="explore-vision-tile"
-            type="button"
-            data-action="details"
-            data-recipe-id="${recipe.id}"
-            aria-label="View ${escapeHtml(recipe.title)}"
-            title="${escapeHtml(recipe.title)}"
-            style="left:${localPosition.x}px;top:${localPosition.y}px;width:${size}px;height:${size}px;--tile-rotate:${tilt.toFixed(2)}deg;z-index:${80 + recipeIndex};"
-          >
-            <img
-              class="explore-vision-thumb"
-              src="${recipe.thumbnail}"
-              alt="${escapeHtml(recipe.title)}"
-              onerror="${getThumbnailFallbackAttribute()}"
-            />
-            <span class="explore-vision-overlay">
-              <span class="explore-vision-title">${escapeHtml(recipe.title)}</span>
-              <span class="explore-vision-sub">${escapeHtml(recipe.cuisine || recipe.complexityLabel)}</span>
-            </span>
-          </button>
-        `;
-      }).join("")}
-    </section>
-  `).join("");
+        const x = island.cx - (island.width / 2) + localPosition.x;
+        const y = island.cy - (island.height / 2) + localPosition.y;
+        return {
+          ...recipe,
+          x,
+          y,
+          size,
+          tilt: hashToRange(recipe.id, -4.2, 4.2),
+          zIndex: 80 + recipeIndex
+        };
+      }),
+      index: islandIndex
+    };
+  });
+
+  const graphLinks = buildExploreIslandGraphLinks(graphIslands);
+
+  elements.exploreVisionGrid.innerHTML = `
+    <svg class="explore-graph-svg" viewBox="0 0 2480 1680" preserveAspectRatio="none" aria-hidden="true">
+      ${graphLinks.map((link) => `
+        <line
+          class="explore-graph-link"
+          x1="${link.x1}"
+          y1="${link.y1}"
+          x2="${link.x2}"
+          y2="${link.y2}"
+        ></line>
+      `).join("")}
+      ${graphIslands.map((island) => island.recipes.map((recipe) => `
+        <line
+          class="explore-graph-spoke"
+          x1="${island.hubX}"
+          y1="${island.hubY}"
+          x2="${recipe.x}"
+          y2="${recipe.y}"
+        ></line>
+      `).join("")).join("")}
+    </svg>
+    ${graphIslands.map((island) => `
+      <div
+        class="explore-island-backdrop"
+        style="left:${island.hubX}px;top:${island.hubY}px;width:${island.width}px;height:${island.height}px;"
+      ></div>
+      <button
+        class="explore-island-hub"
+        type="button"
+        data-focus-island="${island.index}"
+        aria-label="Focus ${escapeHtml(island.label)}"
+        style="left:${island.hubX}px;top:${island.hubY}px;"
+      >
+        <span class="explore-island-kicker">Hub ${island.index + 1}</span>
+        <strong>${escapeHtml(island.label)}</strong>
+        <span class="explore-island-count">${island.recipes.length} dishes</span>
+      </button>
+      ${island.recipes.map((recipe) => `
+        <button
+          class="explore-vision-tile"
+          type="button"
+          data-action="details"
+          data-recipe-id="${recipe.id}"
+          aria-label="View ${escapeHtml(recipe.title)}"
+          title="${escapeHtml(recipe.title)}"
+          style="left:${recipe.x}px;top:${recipe.y}px;width:${recipe.size}px;height:${recipe.size}px;--tile-rotate:${recipe.tilt.toFixed(2)}deg;z-index:${recipe.zIndex};"
+        >
+          <img
+            class="explore-vision-thumb"
+            src="${recipe.thumbnail}"
+            alt="${escapeHtml(recipe.title)}"
+            onerror="${getThumbnailFallbackAttribute()}"
+          />
+        </button>
+      `).join("")}
+    `).join("")}
+  `;
 
   updateExploreSurfaceScale();
+}
+
+function buildExploreIslandGraphLinks(islands) {
+  const links = [];
+  const seen = new Set();
+
+  islands.forEach((island, index) => {
+    const nearest = islands
+      .filter((candidate, candidateIndex) => candidateIndex !== index)
+      .map((candidate, candidateIndex) => ({
+        candidate,
+        distance: Math.hypot(candidate.hubX - island.hubX, candidate.hubY - island.hubY)
+      }))
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, 2);
+
+    nearest.forEach(({ candidate }) => {
+      const key = [island.id, candidate.id].sort().join("::");
+      if (seen.has(key)) return;
+      seen.add(key);
+      links.push({
+        x1: island.hubX,
+        y1: island.hubY,
+        x2: candidate.hubX,
+        y2: candidate.hubY
+      });
+    });
+  });
+
+  return links;
 }
 
 function pickExploreRecipes(recipes) {
@@ -1463,6 +1691,23 @@ function centerExploreViewport() {
   frame.scrollTop = Math.max(0, (frame.scrollHeight - frame.clientHeight) / 2 - 60);
 }
 
+function focusExploreIsland(index) {
+  const frame = elements.exploreVisionGrid?.parentElement;
+  const hub = elements.exploreVisionGrid?.querySelector(`[data-focus-island="${index}"]`);
+  if (!frame || !hub) return;
+
+  const hubRect = hub.getBoundingClientRect();
+  const frameRect = frame.getBoundingClientRect();
+  const targetLeft = frame.scrollLeft + (hubRect.left - frameRect.left) - (frame.clientWidth / 2) + (hubRect.width / 2);
+  const targetTop = frame.scrollTop + (hubRect.top - frameRect.top) - (frame.clientHeight / 2) + (hubRect.height / 2);
+
+  frame.scrollTo({
+    left: Math.max(0, targetLeft),
+    top: Math.max(0, targetTop),
+    behavior: "smooth"
+  });
+}
+
 function resetRecipeSwipeState() {
   state.recipeSwipePointerId = null;
   state.recipeSwipeStartX = 0;
@@ -1487,14 +1732,31 @@ async function runRecipeSearch() {
 }
 
 function buildSearchProfile() {
+  const queryTokens = expandTokens(tokenize(state.vibe));
+  const queryIntents = parseQueryIntents(state.vibe);
   return {
     queryText: state.vibe,
     semanticQuery: state.vibe,
     filters: {
       complexity: state.selectedComplexity,
-      diet: state.selectedDiet
+      diet: state.selectedDiet,
+      queryTokens,
+      queryIntents
     }
   };
+}
+
+function parseQueryIntents(queryText) {
+  const lower = (queryText || "").toLowerCase();
+  if (!lower.trim()) return [];
+
+  return Object.entries(queryIntentLexicon)
+    .filter(([, config]) => config.terms.some((term) => lower.includes(term)))
+    .map(([intentId, config]) => ({
+      id: intentId,
+      feature: config.feature,
+      strength: config.strength
+    }));
 }
 
 async function rankRecipesSmart(recipes, profile) {
@@ -1564,7 +1826,7 @@ async function fetchQueryEmbedding(queryText) {
 }
 
 function rankRecipesLexically(recipes, profile) {
-  const queryTokens = expandTokens(tokenize(profile.semanticQuery));
+  const queryTokens = profile.queryTokens || expandTokens(tokenize(profile.semanticQuery));
 
   return [...recipes]
     .map((recipe) => {
@@ -1573,6 +1835,7 @@ function rankRecipesLexically(recipes, profile) {
         recipe.summary,
         recipe.cuisine,
         recipe.moodTags.join(" "),
+        (recipe.searchFeatures || []).join(" "),
         recipe.ingredients.join(" ")
       ].join(" "));
       const lexicalScore = queryTokens.length ? cosineSimilarity(vectorize(queryTokens), vectorize(textTokens)) : 0;
@@ -1589,9 +1852,57 @@ function rankRecipeScore(recipe, filters, semanticScore) {
   const dietPreferenceBonus = getDietPreferenceBonus(filters.diet, recipe.diet);
   const complexityDistance = Math.abs(getComplexityScore(filters.complexity) - getComplexityScore(recipe.complexity));
   const complexityBonus = complexityDistance === 0 ? 16 : complexityDistance === 1 ? -3 : -9;
-  let score = semanticScore * 100 + complexityBonus + dietPreferenceBonus;
+  const cuisineIntentBonus = getCuisineIntentBonus(filters.queryTokens || [], recipe);
+  const queryIntentBonus = getQueryIntentBonus(filters.queryIntents || [], recipe);
+  let score = semanticScore * 100 + complexityBonus + dietPreferenceBonus + cuisineIntentBonus + queryIntentBonus;
   score += Math.random() * 0.6;
   return score;
+}
+
+function getCuisineIntentBonus(queryTokens, recipe) {
+  if (!queryTokens.length) return 0;
+
+  const haystack = [
+    recipe.title || "",
+    recipe.summary || "",
+    recipe.cuisine || "",
+    ...(recipe.moodTags || [])
+  ].join(" ").toLowerCase();
+
+  let bonus = 0;
+  Object.values(cuisineIntentLexicon).forEach((terms) => {
+    const queryMatched = terms.some((term) => queryTokens.includes(term) || queryTokens.join(" ").includes(term));
+    if (!queryMatched) return;
+    const recipeMatched = terms.some((term) => haystack.includes(term));
+    if (recipeMatched) bonus += 14;
+  });
+
+  if (queryTokens.includes("comfort") && /(british|french|irish|scottish|welsh)/.test(haystack)) {
+    bonus += 4;
+  }
+
+  return bonus;
+}
+
+function getQueryIntentBonus(queryIntents, recipe) {
+  if (!queryIntents.length) return 0;
+  const features = new Set(recipe.searchFeatures || []);
+  let bonus = 0;
+
+  queryIntents.forEach((intent) => {
+    const matched = features.has(intent.feature);
+    if (intent.strength === "hard") {
+      bonus += matched ? 18 : -16;
+      return;
+    }
+    if (intent.strength === "strong") {
+      bonus += matched ? 11 : -9;
+      return;
+    }
+    bonus += matched ? 4 : 0;
+  });
+
+  return bonus;
 }
 
 function getDietPreferenceBonus(selectedDiet, recipeDiet) {
