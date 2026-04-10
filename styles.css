@@ -2067,7 +2067,10 @@ textarea {
   }
 
   .landing-shell {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    min-height: calc(100vh - 64px);
     max-height: none;
     gap: 12px;
     margin: 0;
@@ -2078,6 +2081,7 @@ textarea {
   }
 
   .landing-main {
+    flex: 1 0 auto;
     order: 1;
     padding: 6px 12px 8px;
     justify-content: flex-start;
@@ -2090,8 +2094,8 @@ textarea {
     justify-content: flex-start;
     gap: 8px;
     order: 2;
-    margin-top: 4px;
-    padding: 0 6px 0;
+    margin-top: auto;
+    padding: 6px 6px 4px;
     color: rgba(24, 24, 24, 0.72);
     text-align: center;
   }
@@ -2277,13 +2281,15 @@ textarea {
   }
 
   .results-screen {
-    padding: 12px;
+    justify-content: flex-start;
+    padding: 8px 12px 10px;
+    gap: 6px;
   }
 
   .results-topbar {
     align-items: flex-start;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
   }
 
   .results-heading {
@@ -2298,7 +2304,7 @@ textarea {
 
   .deck-frame {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 10px;
   }
 
   .nav-arrow {
@@ -2332,6 +2338,7 @@ textarea {
   }
 
   .recipe-card {
+    height: 460px;
     min-height: 460px;
     padding: 15px 16px;
     gap: 10px;
@@ -2370,6 +2377,11 @@ textarea {
 
   .card-main {
     gap: 10px;
+  }
+
+  .deck-dots {
+    margin-top: auto;
+    padding-bottom: 2px;
   }
 
   .tag {
@@ -2535,9 +2547,15 @@ textarea {
   }
 
   .recipe-card {
+    height: 420px;
     min-height: 420px;
     padding: 14px;
     border-radius: 28px;
+  }
+
+  .deck-stack {
+    min-height: 420px;
+    height: 420px;
   }
 
   .card-actions-quiet .mini-button {
