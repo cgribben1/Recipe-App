@@ -2051,6 +2051,7 @@ textarea {
 
   .screen[data-screen="landing"] {
     align-items: flex-start;
+    justify-content: flex-start;
     padding: 0;
   }
 
@@ -2058,6 +2059,7 @@ textarea {
     width: 100%;
     max-height: none;
     gap: 12px;
+    margin: 0;
   }
 
   .landing-sidebar {
@@ -2066,7 +2068,8 @@ textarea {
 
   .landing-main {
     order: 1;
-    padding: 8px 12px 12px;
+    padding: 6px 12px 18px;
+    justify-content: flex-start;
   }
 
   .landing-mobile-footer {
@@ -2076,7 +2079,7 @@ textarea {
     justify-content: flex-start;
     gap: 8px;
     order: 2;
-    margin-top: 8px;
+    margin-top: 10px;
     padding: 4px 6px 0;
     color: rgba(24, 24, 24, 0.72);
     text-align: center;
