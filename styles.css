@@ -1222,7 +1222,7 @@ textarea {
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 14px;
-  animation: cardSlideInRight 280ms cubic-bezier(.22,1,.36,1);
+  animation: cardSlideInRight 240ms cubic-bezier(.22,1,.36,1);
 }
 
 .recipe-card.card-enter-left {
@@ -1846,23 +1846,23 @@ textarea {
 
 @keyframes cardSlideInRight {
   from {
-    opacity: 0;
-    transform: translateX(40px) scale(0.985);
+    opacity: 0.76;
+    transform: translateX(34px);
   }
   to {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateX(0);
   }
 }
 
 @keyframes cardSlideInLeft {
   from {
-    opacity: 0;
-    transform: translateX(-40px) scale(0.985);
+    opacity: 0.76;
+    transform: translateX(-34px);
   }
   to {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateX(0);
   }
 }
 
@@ -2010,7 +2010,8 @@ textarea {
   }
 
   .landing-sidebar-group {
-    margin-left: auto;
+    margin-left: 0;
+    padding-right: 16px;
   }
 
   .landing-profile-card {
@@ -2243,23 +2244,23 @@ textarea {
   }
 
   .results-screen {
-    padding: 16px;
+    padding: 12px;
   }
 
   .results-topbar {
     align-items: flex-start;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
   }
 
   .results-heading {
-    font-size: 0.92rem;
+    font-size: 0.84rem;
     line-height: 1.12;
   }
 
   .results-home-button {
-    font-size: 0.68rem;
-    padding: 7px 10px;
+    font-size: 0.64rem;
+    padding: 6px 9px;
   }
 
   .deck-frame {
@@ -2282,7 +2283,7 @@ textarea {
 
   .deck-stack {
     order: 1;
-    min-height: 540px;
+    min-height: 460px;
   }
 
   .nav-arrow {
@@ -2298,8 +2299,9 @@ textarea {
   }
 
   .recipe-card {
-    min-height: 540px;
-    padding: 20px;
+    min-height: 460px;
+    padding: 15px 16px;
+    gap: 10px;
   }
 
   .recipe-title-row h3,
@@ -2309,16 +2311,42 @@ textarea {
   }
 
   .recipe-thumb {
-    max-height: 180px;
+    max-height: 138px;
   }
 
   .recipe-summary {
-    font-size: 0.84rem;
-    line-height: 1.45;
+    font-size: 0.78rem;
+    line-height: 1.38;
   }
 
   .facts-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card-header,
+  .card-meta,
+  .recipe-actions,
+  .cook-controls {
+    gap: 8px;
+  }
+
+  .card-main {
+    gap: 10px;
+  }
+
+  .tag {
+    padding: 6px 9px;
+    font-size: 0.76rem;
+  }
+
+  .fact {
+    padding: 8px 7px;
+    font-size: 0.8rem;
+  }
+
+  .fact-label {
+    font-size: 0.64rem;
+    margin-bottom: 4px;
   }
 
   .recipe-actions,
@@ -2421,14 +2449,15 @@ textarea {
   }
 
   .recipe-card {
-    min-height: 510px;
-    padding: 16px;
+    min-height: 420px;
+    padding: 14px;
     border-radius: 28px;
   }
 
   .facts-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     max-width: none;
+    gap: 8px;
   }
 
   .nav-arrow {

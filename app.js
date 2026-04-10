@@ -1115,9 +1115,8 @@ function attachEventListeners() {
     const card = elements.recipeDeck.querySelector(".recipe-card");
     if (!card) return;
     card.classList.add("recipe-card-dragging");
-    const rotation = clamp(deltaX / 24, -8, 8);
-    card.style.transform = `translateX(${deltaX}px) rotate(${rotation}deg)`;
-    card.style.opacity = `${clamp(1 - (Math.abs(deltaX) / 420), 0.72, 1)}`;
+    card.style.transform = `translateX(${deltaX}px)`;
+    card.style.opacity = `${clamp(1 - (Math.abs(deltaX) / 900), 0.9, 1)}`;
   });
 
   const finishRecipeSwipe = (event) => {
@@ -1718,6 +1717,7 @@ function resetRecipeSwipeState() {
 
 async function runRecipeSearch() {
   state.vibe = elements.vibeInput.value.trim();
+  resetAppScrollPosition();
   showScreen("loading");
 
   window.setTimeout(async () => {
@@ -1726,8 +1726,10 @@ async function runRecipeSearch() {
     state.rankedRecipes = recipes.slice(0, 50);
     state.currentCardIndex = 0;
     state.recipeNavDirection = 1;
+    resetAppScrollPosition();
     renderRecipeDeck();
     showScreen("results");
+    resetAppScrollPosition();
   }, 1400);
 }
 
@@ -2015,13 +2017,14 @@ function animatePromptIntoInput(promptText) {
     state.promptTypingTimer = null;
   }
 
-  elements.vibeInput.focus();
   elements.vibeInput.value = "";
 
   let index = 0;
   const typeNext = () => {
     elements.vibeInput.value = promptText.slice(0, index);
-    elements.vibeInput.setSelectionRange(index, index);
+    if (document.activeElement === elements.vibeInput) {
+      elements.vibeInput.setSelectionRange(index, index);
+    }
 
     if (index >= promptText.length) {
       state.promptTypingTimer = null;
@@ -2112,6 +2115,15 @@ function moveRecipeIndex(direction) {
   const lastIndex = state.rankedRecipes.length - 1;
   state.currentCardIndex = nextIndex < 0 ? lastIndex : nextIndex > lastIndex ? 0 : nextIndex;
   renderRecipeDeck();
+}
+
+function resetAppScrollPosition() {
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  elements.screens.forEach((screen) => {
+    screen.scrollTop = 0;
+  });
 }
 
 function handleAction(action, recipeId) {
