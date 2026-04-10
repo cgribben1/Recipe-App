@@ -1204,6 +1204,7 @@ textarea {
   width: 100%;
   min-height: inherit;
   overflow: hidden;
+  --swipe-offset: 0px;
 }
 
 .transition-card {
@@ -1211,27 +1212,27 @@ textarea {
   inset: 0;
   width: 100%;
   margin: 0;
-  animation: none;
+  animation: none !important;
 }
 
 .transition-forward .transition-card-current,
 .transition-backward .transition-card-current,
 .transition-forward .transition-card-next,
 .transition-backward .transition-card-next {
-  transition: transform 240ms cubic-bezier(.22,1,.36,1), opacity 240ms cubic-bezier(.22,1,.36,1);
+  transition: transform 320ms cubic-bezier(.22,1,.36,1), opacity 320ms cubic-bezier(.22,1,.36,1);
 }
 
 .transition-forward .transition-card-current {
-  transform: translateX(0);
+  transform: translateX(var(--swipe-offset));
 }
 
 .transition-forward .transition-card-next {
-  transform: translateX(calc(100% + 16px));
+  transform: translateX(calc(100% + 16px + var(--swipe-offset)));
 }
 
 .transition-forward.is-animating .transition-card-current {
   transform: translateX(calc(-100% - 16px));
-  opacity: 0.94;
+  opacity: 0.98;
 }
 
 .transition-forward.is-animating .transition-card-next {
@@ -1239,16 +1240,16 @@ textarea {
 }
 
 .transition-backward .transition-card-current {
-  transform: translateX(0);
+  transform: translateX(var(--swipe-offset));
 }
 
 .transition-backward .transition-card-next {
-  transform: translateX(calc(-100% - 16px));
+  transform: translateX(calc(-100% - 16px + var(--swipe-offset)));
 }
 
 .transition-backward.is-animating .transition-card-current {
   transform: translateX(calc(100% + 16px));
-  opacity: 0.94;
+  opacity: 0.98;
 }
 
 .transition-backward.is-animating .transition-card-next {
@@ -1280,6 +1281,7 @@ textarea {
   grid-template-rows: auto 1fr auto;
   gap: 14px;
   animation: cardSlideInRight 240ms cubic-bezier(.22,1,.36,1);
+  transition: transform 260ms cubic-bezier(.22,1,.36,1), opacity 260ms cubic-bezier(.22,1,.36,1);
 }
 
 .recipe-card.card-enter-left {

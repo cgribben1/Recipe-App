@@ -1131,12 +1131,14 @@ function attachEventListeners() {
     const card = elements.recipeDeck.querySelector(".recipe-card");
     if (card) {
       card.classList.remove("recipe-card-dragging");
-      card.style.transform = "";
-      card.style.opacity = "";
+      if (!shouldSwipe) {
+        card.style.transform = "";
+        card.style.opacity = "";
+      }
     }
     resetRecipeSwipeState();
     if (shouldSwipe) {
-      moveRecipeIndex(deltaX < 0 ? 1 : -1);
+      moveRecipeIndex(deltaX < 0 ? 1 : -1, deltaX);
     }
   };
 
@@ -2006,7 +2008,7 @@ function isMobileCardLayout() {
   return typeof window !== "undefined" && window.matchMedia("(max-width: 700px)").matches;
 }
 
-function animateRecipeDeckTransition(nextIndex, direction) {
+function animateRecipeDeckTransition(nextIndex, direction, swipeOffset = 0) {
   if (state.recipeDeckAnimating || !isMobileCardLayout() || !state.rankedRecipes.length) {
     state.currentCardIndex = nextIndex;
     renderRecipeDeck();
@@ -2020,8 +2022,9 @@ function animateRecipeDeckTransition(nextIndex, direction) {
   state.currentCardIndex = nextIndex;
 
   const directionClass = direction > 0 ? "transition-forward" : "transition-backward";
+  const offsetValue = Math.round(swipeOffset);
   elements.recipeDeck.innerHTML = `
-    <div class="recipe-card-transition ${directionClass}">
+    <div class="recipe-card-transition ${directionClass}" style="--swipe-offset:${offsetValue}px;">
       ${createRecipeCardMarkup(currentRecipe, 0, "transition-card transition-card-current")}
       ${createRecipeCardMarkup(nextRecipe, 0, "transition-card transition-card-next")}
     </div>
@@ -2042,7 +2045,7 @@ function animateRecipeDeckTransition(nextIndex, direction) {
   window.setTimeout(() => {
     state.recipeDeckAnimating = false;
     renderRecipeDeck();
-  }, 260);
+  }, 290);
 }
 
 function renderResultsHeading() {
@@ -2157,7 +2160,7 @@ function createRecipeCardMarkup(recipe, direction, extraClass = "") {
   `;
 }
 
-function moveRecipeIndex(direction) {
+function moveRecipeIndex(direction, swipeOffset = 0) {
   if (!state.rankedRecipes.length) return;
   if (state.recipeDeckAnimating) return;
   state.recipeNavDirection = direction;
@@ -2165,7 +2168,7 @@ function moveRecipeIndex(direction) {
   const lastIndex = state.rankedRecipes.length - 1;
   const wrappedIndex = nextIndex < 0 ? lastIndex : nextIndex > lastIndex ? 0 : nextIndex;
   if (isMobileCardLayout()) {
-    animateRecipeDeckTransition(wrappedIndex, direction);
+    animateRecipeDeckTransition(wrappedIndex, direction, swipeOffset);
     return;
   }
   state.currentCardIndex = wrappedIndex;
