@@ -2076,7 +2076,7 @@ function createRecipeCardMarkup(recipe, direction) {
           ${recipe.difficultyContextBadge ? `<span class="recipe-context-badge">${recipe.difficultyContextBadge}</span>` : ""}
         </div>
         <div class="card-actions-quiet">
-          <button class="mini-button" data-action="details" data-recipe-id="${recipe.id}">View</button>
+          <button class="mini-button mobile-only-action" data-action="details" data-recipe-id="${recipe.id}">View</button>
           <button class="mini-button" data-action="save" data-recipe-id="${recipe.id}">${state.savedRecipeIds.includes(recipe.id) ? "Unsave" : "Save"}</button>
         </div>
       </div>
@@ -2104,6 +2104,8 @@ function createRecipeCardMarkup(recipe, direction) {
         </div>
       </div>
       <div class="recipe-actions recipe-actions-primary-split">
+        <button class="mini-button desktop-only-action" data-action="details" data-recipe-id="${recipe.id}">View</button>
+        <button class="mini-button desktop-only-action" data-action="shopping" data-recipe-id="${recipe.id}">Shopping list</button>
         <button class="mini-button" data-action="alter" data-recipe-id="${recipe.id}">✦ Alter recipe ✦</button>
         <button class="primary-button" data-action="cook" data-recipe-id="${recipe.id}">Cook.</button>
       </div>

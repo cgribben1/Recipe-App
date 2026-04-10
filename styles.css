@@ -1356,6 +1356,10 @@ textarea {
   margin-top: 0;
 }
 
+.mobile-only-action {
+  display: none;
+}
+
 .recipe-actions-primary-split > * {
   flex: 1 1 calc(50% - 6px);
 }
@@ -2378,6 +2382,14 @@ textarea {
 
   .card-actions-quiet {
     gap: 8px;
+  }
+
+  .mobile-only-action {
+    display: inline-flex;
+  }
+
+  .desktop-only-action {
+    display: none;
   }
 
   .card-actions-quiet .mini-button {
