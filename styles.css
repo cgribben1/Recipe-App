@@ -1979,11 +1979,76 @@ textarea {
   }
 
   .landing-sidebar {
-    padding: 12px;
+    order: 2;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 14px;
   }
 
   .landing-main {
+    order: 1;
     padding: 14px 14px 16px;
+  }
+
+  .landing-sidebar-label,
+  .landing-sidebar-note,
+  .landing-sidebar-group .landing-side-button:not([data-action="saved"]) {
+    display: none;
+  }
+
+  .landing-sidebar-top,
+  .landing-sidebar-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .landing-sidebar-group {
+    margin-left: auto;
+  }
+
+  .landing-profile-card {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .landing-profile-mark,
+  .landing-profile-meta {
+    display: none;
+  }
+
+  .landing-profile-name {
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(24, 24, 24, 0.82);
+  }
+
+  .landing-sidebar-group .landing-side-button[data-action="saved"] {
+    width: auto;
+    padding: 6px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(24, 24, 24, 0.9);
+  }
+
+  .landing-sidebar-group .landing-side-button[data-action="saved"]:hover {
+    transform: none;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
 
   .landing-main h1 {
