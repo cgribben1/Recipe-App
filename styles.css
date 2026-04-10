@@ -2081,7 +2081,7 @@ textarea {
   }
 
   .landing-main {
-    flex: 1 0 auto;
+    flex: 0 0 auto;
     order: 1;
     padding: 6px 12px 8px;
     justify-content: flex-start;
@@ -2094,8 +2094,8 @@ textarea {
     justify-content: flex-start;
     gap: 8px;
     order: 2;
-    margin-top: auto;
-    padding: 6px 6px 4px;
+    margin-top: clamp(20px, 7vh, 44px);
+    padding: 6px 6px 16px;
     color: rgba(24, 24, 24, 0.72);
     text-align: center;
   }
@@ -2322,7 +2322,7 @@ textarea {
 
   .deck-stack {
     order: 1;
-    min-height: 460px;
+    min-height: 472px;
   }
 
   .nav-arrow {
@@ -2338,8 +2338,8 @@ textarea {
   }
 
   .recipe-card {
-    height: 460px;
-    min-height: 460px;
+    height: 448px;
+    min-height: 448px;
     padding: 15px 16px;
     gap: 10px;
   }
@@ -2547,15 +2547,15 @@ textarea {
   }
 
   .recipe-card {
-    height: 420px;
-    min-height: 420px;
+    height: 404px;
+    min-height: 404px;
     padding: 14px;
     border-radius: 28px;
   }
 
   .deck-stack {
-    min-height: 420px;
-    height: 420px;
+    min-height: 416px;
+    height: 416px;
   }
 
   .card-actions-quiet .mini-button {
