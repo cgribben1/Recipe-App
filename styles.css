@@ -2051,7 +2051,7 @@ textarea {
 
   .screen[data-screen="landing"] {
     align-items: flex-start;
-    padding: 12px;
+    padding: 8px;
   }
 
   .landing-shell {
@@ -2066,7 +2066,7 @@ textarea {
 
   .landing-main {
     order: 1;
-    padding: 14px 14px 16px;
+    padding: 10px 12px 12px;
   }
 
   .landing-mobile-footer {
@@ -2102,17 +2102,18 @@ textarea {
   }
 
   .landing-main h1 {
-    font-size: clamp(2rem, 12vw, 2.7rem);
+    font-size: clamp(1.82rem, 10.8vw, 2.45rem);
   }
 
   .screen[data-screen="landing"] .hero-copy {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     max-width: 42ch;
+    margin-top: 4px;
   }
 
   .screen[data-screen="landing"] .complexity-grid {
     grid-template-columns: 1fr;
-    gap: 7px;
+    gap: 6px;
   }
 
   .screen[data-screen="landing"] .diet-grid {
@@ -2120,8 +2121,8 @@ textarea {
   }
 
   .screen[data-screen="landing"] .complexity-chip {
-    min-height: 46px;
-    padding: 8px 10px 7px;
+    min-height: 44px;
+    padding: 7px 10px 6px;
   }
 
   .screen[data-screen="landing"] .complexity-chip strong {
@@ -2133,12 +2134,24 @@ textarea {
   }
 
   .screen[data-screen="landing"] input[type="text"] {
-    padding: 12px 13px;
-    font-size: 0.92rem;
+    padding: 11px 12px;
+    font-size: 0.9rem;
   }
 
   .landing-action-row .primary-button {
     width: 100%;
+  }
+
+  .screen[data-screen="landing"] .control-block {
+    margin-top: 10px;
+  }
+
+  .landing-action-row {
+    margin-top: 10px;
+  }
+
+  .vibe-input-row {
+    margin-top: 2px;
   }
 
   .screen[data-screen="loading"] {
