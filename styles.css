@@ -2068,7 +2068,7 @@ textarea {
 
   .landing-main {
     order: 1;
-    padding: 6px 12px 18px;
+    padding: 6px 12px 8px;
     justify-content: flex-start;
   }
 
@@ -2079,8 +2079,8 @@ textarea {
     justify-content: flex-start;
     gap: 8px;
     order: 2;
-    margin-top: 10px;
-    padding: 4px 6px 0;
+    margin-top: 4px;
+    padding: 0 6px 0;
     color: rgba(24, 24, 24, 0.72);
     text-align: center;
   }
