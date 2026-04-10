@@ -494,6 +494,7 @@ const state = {
   recipeSwipeStartY: 0,
   recipeSwipeDeltaX: 0,
   recipeSwipeTracking: false,
+  recipeDeckAnimating: false,
   exploreZoom: 1,
   exploreDragging: false,
   exploreDragStartX: 0,
@@ -2001,6 +2002,49 @@ function renderRecipeDeck() {
   renderRecipeDots();
 }
 
+function isMobileCardLayout() {
+  return typeof window !== "undefined" && window.matchMedia("(max-width: 700px)").matches;
+}
+
+function animateRecipeDeckTransition(nextIndex, direction) {
+  if (state.recipeDeckAnimating || !isMobileCardLayout() || !state.rankedRecipes.length) {
+    state.currentCardIndex = nextIndex;
+    renderRecipeDeck();
+    return;
+  }
+
+  const currentRecipe = state.rankedRecipes[state.currentCardIndex];
+  const nextRecipe = state.rankedRecipes[nextIndex];
+  state.recipeDeckAnimating = true;
+  state.recipeNavDirection = direction;
+  state.currentCardIndex = nextIndex;
+
+  const directionClass = direction > 0 ? "transition-forward" : "transition-backward";
+  elements.recipeDeck.innerHTML = `
+    <div class="recipe-card-transition ${directionClass}">
+      ${createRecipeCardMarkup(currentRecipe, 0, "transition-card transition-card-current")}
+      ${createRecipeCardMarkup(nextRecipe, 0, "transition-card transition-card-next")}
+    </div>
+  `;
+  renderRecipeDots();
+
+  const transitionEl = elements.recipeDeck.querySelector(".recipe-card-transition");
+  if (!transitionEl) {
+    state.recipeDeckAnimating = false;
+    renderRecipeDeck();
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    transitionEl.classList.add("is-animating");
+  });
+
+  window.setTimeout(() => {
+    state.recipeDeckAnimating = false;
+    renderRecipeDeck();
+  }, 260);
+}
+
 function renderResultsHeading() {
   if (!elements.resultsHeading) return;
   const vibe = state.vibe.trim();
@@ -2063,10 +2107,10 @@ function renderRecipeDots() {
     .join("");
 }
 
-function createRecipeCardMarkup(recipe, direction) {
-  const directionClass = direction < 0 ? "card-enter-left" : "card-enter-right";
+function createRecipeCardMarkup(recipe, direction, extraClass = "") {
+  const directionClass = direction === 0 ? "" : (direction < 0 ? "card-enter-left" : "card-enter-right");
   return `
-    <article class="recipe-card ${directionClass} ${recipe.thumbnail ? "has-thumbnail" : ""}" data-recipe-id="${recipe.id}">
+    <article class="recipe-card ${directionClass} ${extraClass} ${recipe.thumbnail ? "has-thumbnail" : ""}" data-recipe-id="${recipe.id}">
       <div class="card-header">
         <div class="card-meta">
           <span class="tag">${recipe.cuisine}</span>
@@ -2115,10 +2159,16 @@ function createRecipeCardMarkup(recipe, direction) {
 
 function moveRecipeIndex(direction) {
   if (!state.rankedRecipes.length) return;
+  if (state.recipeDeckAnimating) return;
   state.recipeNavDirection = direction;
   const nextIndex = state.currentCardIndex + direction;
   const lastIndex = state.rankedRecipes.length - 1;
-  state.currentCardIndex = nextIndex < 0 ? lastIndex : nextIndex > lastIndex ? 0 : nextIndex;
+  const wrappedIndex = nextIndex < 0 ? lastIndex : nextIndex > lastIndex ? 0 : nextIndex;
+  if (isMobileCardLayout()) {
+    animateRecipeDeckTransition(wrappedIndex, direction);
+    return;
+  }
+  state.currentCardIndex = wrappedIndex;
   renderRecipeDeck();
 }
 
