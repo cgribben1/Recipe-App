@@ -1220,14 +1220,6 @@ textarea {
   will-change: transform, opacity;
 }
 
-.transition-card-current {
-  z-index: 2;
-}
-
-.transition-card-next {
-  z-index: 1;
-}
-
 .transition-forward .transition-card-current,
 .transition-backward .transition-card-current,
 .transition-forward .transition-card-next,
@@ -1236,10 +1228,12 @@ textarea {
 }
 
 .transition-forward .transition-card-current {
+  z-index: 2;
   transform: translateX(var(--swipe-offset));
 }
 
 .transition-forward .transition-card-next {
+  z-index: 1;
   transform: translateX(calc(100% + 16px + var(--swipe-offset)));
 }
 
@@ -1253,10 +1247,12 @@ textarea {
 }
 
 .transition-backward .transition-card-current {
+  z-index: 1;
   transform: translateX(var(--swipe-offset));
 }
 
 .transition-backward .transition-card-next {
+  z-index: 2;
   transform: translateX(calc(-100% - 16px + var(--swipe-offset)));
 }
 
@@ -2354,6 +2350,11 @@ textarea {
   .recipe-summary {
     font-size: 0.78rem;
     line-height: 1.38;
+    min-height: calc(1.38em * 2);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 
   .facts-grid {
