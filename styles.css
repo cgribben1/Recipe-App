@@ -2060,9 +2060,9 @@ textarea {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin-top: 16px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(9, 9, 9, 0.08);
+    order: 3;
+    margin-top: 2px;
+    padding: 4px 6px 0;
     color: rgba(24, 24, 24, 0.72);
   }
 
@@ -2077,10 +2077,12 @@ textarea {
   .landing-mobile-links {
     display: flex;
     align-items: center;
-    gap: 16px;
-    font-size: 0.74rem;
+    gap: 12px;
+    font-size: 0.66rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   .landing-main h1 {
