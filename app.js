@@ -1995,11 +1995,13 @@ function expandTokens(tokens) {
 function renderRecipeDeck() {
   renderResultsHeading();
   if (!state.rankedRecipes.length) {
+    elements.recipeDeck.style.height = "";
     elements.recipeDeck.innerHTML = `<div class="recipe-card"><h3>No matches yet</h3><p class="recipe-summary">Try loosening one or two filters, or keep the filters and change the vibe text.</p></div>`;
     elements.recipeDots.innerHTML = "";
     return;
   }
 
+  elements.recipeDeck.style.height = "";
   const recipe = state.rankedRecipes[state.currentCardIndex];
   const direction = state.skipNextRecipeCardAnimation ? 0 : state.recipeNavDirection;
   state.skipNextRecipeCardAnimation = false;
@@ -2020,14 +2022,17 @@ function animateRecipeDeckTransition(nextIndex, direction, swipeOffset = 0) {
 
   const currentRecipe = state.rankedRecipes[state.currentCardIndex];
   const nextRecipe = state.rankedRecipes[nextIndex];
+  const currentCardEl = elements.recipeDeck.querySelector(".recipe-card");
+  const lockedHeight = Math.max(currentCardEl?.offsetHeight || 0, elements.recipeDeck.offsetHeight || 0, 420);
   state.recipeDeckAnimating = true;
   state.recipeNavDirection = direction;
   state.currentCardIndex = nextIndex;
+  elements.recipeDeck.style.height = `${lockedHeight}px`;
 
   const directionClass = direction > 0 ? "transition-forward" : "transition-backward";
   const offsetValue = Math.round(swipeOffset);
   elements.recipeDeck.innerHTML = `
-    <div class="recipe-card-transition ${directionClass}" style="--swipe-offset:${offsetValue}px;">
+    <div class="recipe-card-transition ${directionClass}" style="--swipe-offset:${offsetValue}px; height:${lockedHeight}px;">
       ${createRecipeCardMarkup(currentRecipe, 0, "transition-card transition-card-current")}
       ${createRecipeCardMarkup(nextRecipe, 0, "transition-card transition-card-next")}
     </div>
