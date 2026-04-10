@@ -2348,7 +2348,7 @@ textarea {
   }
 
   .recipe-thumb {
-    max-height: 138px;
+    max-height: 164px;
   }
 
   .recipe-summary {
@@ -2396,7 +2396,10 @@ textarea {
   }
 
   .card-actions-quiet {
+    width: 100%;
     gap: 8px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
   }
 
   .mobile-only-action {
@@ -2410,6 +2413,15 @@ textarea {
   .card-actions-quiet .mini-button {
     padding: 8px 11px;
     font-size: 0.72rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card-meta {
+    width: 100%;
   }
 
   .recipe-actions-primary-split {
