@@ -554,7 +554,8 @@ const elements = {
   cookPreviousButton: document.getElementById("cookPreviousButton"),
   cookNextButton: document.getElementById("cookNextButton"),
   finishSaveButton: document.getElementById("finishSaveButton"),
-  finishBackButton: document.getElementById("finishBackButton")
+  finishBackButton: document.getElementById("finishBackButton"),
+  cookFullscreenButton: document.getElementById("cookFullscreenButton")
 };
 
 initialize();
@@ -984,6 +985,7 @@ function attachEventListeners() {
   elements.nextRecipeButton.addEventListener("click", () => moveRecipeIndex(1));
   elements.cookPreviousButton.addEventListener("click", retreatCookStep);
   elements.cookNextButton.addEventListener("click", advanceCookStep);
+  elements.cookFullscreenButton?.addEventListener("click", toggleCookFullscreen);
   elements.finishSaveButton.addEventListener("click", () => {
     if (!state.cookRecipe) return;
     toggleSaveRecipe(state.cookRecipe.id);
@@ -1063,6 +1065,8 @@ function attachEventListeners() {
     if (event.key === "ArrowLeft") moveRecipeIndex(-1);
     if (event.key === "ArrowRight") moveRecipeIndex(1);
   });
+
+  document.addEventListener("fullscreenchange", updateCookFullscreenButton);
 
   const exploreFrame = elements.exploreVisionGrid?.parentElement;
   exploreFrame?.addEventListener("pointerdown", (event) => {
@@ -2072,6 +2076,7 @@ function createRecipeCardMarkup(recipe, direction) {
           ${recipe.difficultyContextBadge ? `<span class="recipe-context-badge">${recipe.difficultyContextBadge}</span>` : ""}
         </div>
         <div class="card-actions-quiet">
+          <button class="mini-button" data-action="details" data-recipe-id="${recipe.id}">View</button>
           <button class="mini-button" data-action="save" data-recipe-id="${recipe.id}">${state.savedRecipeIds.includes(recipe.id) ? "Unsave" : "Save"}</button>
         </div>
       </div>
@@ -2098,9 +2103,7 @@ function createRecipeCardMarkup(recipe, direction) {
           }
         </div>
       </div>
-      <div class="recipe-actions">
-        <button class="mini-button" data-action="details" data-recipe-id="${recipe.id}">View</button>
-        <button class="mini-button" data-action="shopping" data-recipe-id="${recipe.id}">Shopping list</button>
+      <div class="recipe-actions recipe-actions-primary-split">
         <button class="mini-button" data-action="alter" data-recipe-id="${recipe.id}">✦ Alter recipe ✦</button>
         <button class="primary-button" data-action="cook" data-recipe-id="${recipe.id}">Cook.</button>
       </div>
@@ -2124,6 +2127,31 @@ function resetAppScrollPosition() {
   elements.screens.forEach((screen) => {
     screen.scrollTop = 0;
   });
+}
+
+async function toggleCookFullscreen() {
+  const cookScreen = elements.screens.find((screen) => screen.dataset.screen === "cook");
+  if (!cookScreen) return;
+
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else if (cookScreen.requestFullscreen) {
+      await cookScreen.requestFullscreen({ navigationUI: "hide" });
+      if (screen.orientation?.lock) {
+        try {
+          await screen.orientation.lock("landscape");
+        } catch {}
+      }
+    }
+  } catch {}
+
+  updateCookFullscreenButton();
+}
+
+function updateCookFullscreenButton() {
+  if (!elements.cookFullscreenButton) return;
+  elements.cookFullscreenButton.textContent = document.fullscreenElement ? "Exit full screen" : "Full screen";
 }
 
 function handleAction(action, recipeId) {
@@ -2172,7 +2200,6 @@ function renderDetailModal(recipe) {
     <h3>Steps</h3>
     <ol class="steps-list">${recipe.steps.map((step) => `<li>${step}</li>`).join("")}</ol>
     <div class="detail-actions">
-      <button class="mini-button" data-action="shopping" data-recipe-id="${recipe.id}">Shopping list</button>
       <button class="mini-button" data-action="alter" data-recipe-id="${recipe.id}">✦ Alter recipe ✦</button>
       <button class="primary-button" data-action="cook" data-recipe-id="${recipe.id}">Cook.</button>
     </div>
@@ -2603,9 +2630,13 @@ function escapeRegExp(value) {
 }
 
 function showScreen(target) {
+  if (target !== "cook" && document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
   elements.screens.forEach((screen) => {
     screen.classList.toggle("screen-active", screen.dataset.screen === target);
   });
+  updateCookFullscreenButton();
 }
 
 function toTitleCase(value) {

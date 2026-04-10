@@ -1356,6 +1356,10 @@ textarea {
   margin-top: 0;
 }
 
+.recipe-actions-primary-split > * {
+  flex: 1 1 calc(50% - 6px);
+}
+
 .deck-dots {
   display: flex;
   gap: 10px;
@@ -1576,6 +1580,19 @@ textarea {
   font-size: 0.68rem;
   color: rgba(255, 255, 255, 0.58);
   z-index: 2;
+}
+
+.cook-fullscreen-button {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  z-index: 2;
+  margin-top: 0;
+  padding: 8px 12px;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.84);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 .cook-ingredients {
@@ -2011,7 +2028,7 @@ textarea {
 
   .landing-sidebar-group {
     margin-left: 0;
-    padding-right: 16px;
+    padding-right: 22px;
   }
 
   .landing-profile-card {
@@ -2047,6 +2064,7 @@ textarea {
   .landing-sidebar-group .landing-side-button[data-action="saved"] {
     width: auto;
     padding: 6px 0;
+    margin-right: 14px;
     border: 0;
     border-radius: 0;
     background: transparent;
@@ -2349,15 +2367,36 @@ textarea {
     margin-bottom: 4px;
   }
 
-  .recipe-actions,
   .cook-controls {
     flex-direction: column;
   }
 
-  .recipe-actions > button,
   .cook-secondary,
   .cook-next {
     width: 100%;
+  }
+
+  .card-actions-quiet {
+    gap: 8px;
+  }
+
+  .card-actions-quiet .mini-button {
+    padding: 8px 11px;
+    font-size: 0.72rem;
+  }
+
+  .recipe-actions-primary-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .recipe-actions-primary-split > button {
+    width: 100%;
+    margin-top: 0;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .cook-controls {
@@ -2388,6 +2427,13 @@ textarea {
 
   .cook-ingredients {
     gap: 8px;
+  }
+
+  .cook-fullscreen-button {
+    top: 8px;
+    right: 12px;
+    padding: 7px 10px;
+    font-size: 0.64rem;
   }
 
   .cook-ingredient-item {
@@ -2452,6 +2498,11 @@ textarea {
     min-height: 420px;
     padding: 14px;
     border-radius: 28px;
+  }
+
+  .card-actions-quiet .mini-button {
+    padding: 7px 10px;
+    font-size: 0.68rem;
   }
 
   .facts-grid {
