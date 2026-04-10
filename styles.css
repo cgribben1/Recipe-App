@@ -244,6 +244,10 @@ button {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(244, 240, 234, 0.6));
 }
 
+.landing-mobile-footer {
+  display: none;
+}
+
 .eyebrow,
 .control-label,
 .cook-step-label {
@@ -2049,6 +2053,34 @@ textarea {
     background: transparent;
     border-color: transparent;
     box-shadow: none;
+  }
+
+  .landing-mobile-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 16px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(9, 9, 9, 0.08);
+    color: rgba(24, 24, 24, 0.72);
+  }
+
+  .landing-mobile-brand {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: rgba(18, 18, 18, 0.86);
+  }
+
+  .landing-mobile-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .landing-main h1 {
