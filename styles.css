@@ -1205,6 +1205,7 @@ textarea {
   min-height: inherit;
   overflow: hidden;
   --swipe-offset: 0px;
+  contain: layout paint;
 }
 
 .transition-card {
@@ -1213,6 +1214,16 @@ textarea {
   width: 100%;
   margin: 0;
   animation: none !important;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.transition-card-current {
+  z-index: 2;
+}
+
+.transition-card-next {
+  z-index: 1;
 }
 
 .transition-forward .transition-card-current,

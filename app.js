@@ -495,6 +495,7 @@ const state = {
   recipeSwipeDeltaX: 0,
   recipeSwipeTracking: false,
   recipeDeckAnimating: false,
+  skipNextRecipeCardAnimation: false,
   exploreZoom: 1,
   exploreDragging: false,
   exploreDragStartX: 0,
@@ -2000,7 +2001,9 @@ function renderRecipeDeck() {
   }
 
   const recipe = state.rankedRecipes[state.currentCardIndex];
-  elements.recipeDeck.innerHTML = createRecipeCardMarkup(recipe, state.recipeNavDirection);
+  const direction = state.skipNextRecipeCardAnimation ? 0 : state.recipeNavDirection;
+  state.skipNextRecipeCardAnimation = false;
+  elements.recipeDeck.innerHTML = createRecipeCardMarkup(recipe, direction);
   renderRecipeDots();
 }
 
@@ -2044,6 +2047,7 @@ function animateRecipeDeckTransition(nextIndex, direction, swipeOffset = 0) {
 
   window.setTimeout(() => {
     state.recipeDeckAnimating = false;
+    state.skipNextRecipeCardAnimation = true;
     renderRecipeDeck();
   }, 290);
 }
