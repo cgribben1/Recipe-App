@@ -2096,8 +2096,8 @@ textarea {
     justify-content: flex-start;
     gap: 8px;
     order: 2;
-    margin-top: clamp(20px, 7vh, 44px);
-    padding: 6px 6px 16px;
+    margin-top: clamp(10px, 4vh, 24px);
+    padding: 6px 6px 8px;
     color: rgba(24, 24, 24, 0.72);
     text-align: center;
   }
@@ -2284,8 +2284,8 @@ textarea {
 
   .results-screen {
     justify-content: flex-start;
-    padding: 8px 12px 12px;
-    gap: 6px;
+    padding: 6px 12px 8px;
+    gap: 4px;
   }
 
   .results-topbar {
@@ -2307,8 +2307,8 @@ textarea {
   .deck-frame {
     grid-template-columns: 1fr;
     gap: 10px;
-    flex: 1 1 auto;
-    align-content: center;
+    flex: 0 0 auto;
+    align-content: flex-start;
   }
 
   .nav-arrow {
@@ -2328,7 +2328,7 @@ textarea {
     order: 1;
     min-height: 472px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .nav-arrow {
@@ -2386,8 +2386,8 @@ textarea {
   }
 
   .deck-dots {
-    margin-top: auto;
-    padding-bottom: 6px;
+    margin-top: 6px;
+    padding-bottom: 2px;
   }
 
   .tag {
