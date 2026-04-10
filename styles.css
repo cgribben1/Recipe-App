@@ -2052,7 +2052,7 @@ textarea {
   .screen[data-screen="landing"] {
     align-items: flex-start;
     justify-content: flex-start;
-    padding: 52px 0 0;
+    padding: 64px 0 0;
   }
 
   .landing-shell {
