@@ -2287,15 +2287,15 @@ textarea {
 
   .results-screen {
     justify-content: flex-start;
-    padding: 44px 10px 10px;
-    gap: 6px;
+    padding: 24px 10px 8px;
+    gap: 4px;
   }
 
   .results-topbar {
     align-items: flex-start;
     flex-direction: column;
     gap: 4px;
-    margin-top: 18px;
+    margin-top: 8px;
   }
 
   .results-heading {
@@ -2415,7 +2415,7 @@ textarea {
 
   .deck-dots {
     margin-top: 0;
-    padding-bottom: 18px;
+    padding-bottom: 8px;
   }
 
   .tag {
