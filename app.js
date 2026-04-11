@@ -512,6 +512,8 @@ const state = {
   cookStepIndex: 0,
   cookStepDirection: 1,
   cookAnimating: false,
+  cookTapGuideVisible: false,
+  cookTapGuideTimer: null,
   alterRecipeId: null,
   alterPending: false
 };
@@ -553,6 +555,9 @@ const elements = {
   cookIngredientsList: document.getElementById("cookIngredientsList"),
   cookRecipeTitle: document.getElementById("cookRecipeTitle"),
   cookTrack: document.getElementById("cookTrack"),
+  cookTapZones: document.getElementById("cookTapZones"),
+  cookTapPrevZone: document.getElementById("cookTapPrevZone"),
+  cookTapNextZone: document.getElementById("cookTapNextZone"),
   cookPreviousButton: document.getElementById("cookPreviousButton"),
   cookNextButton: document.getElementById("cookNextButton"),
   cookBackButton: document.getElementById("cookBackButton"),
@@ -717,6 +722,44 @@ function isMobilePortraitCookMode() {
     return false;
   }
   return window.matchMedia("(max-width: 700px) and (orientation: portrait)").matches;
+}
+
+function isMobileLandscapeCookMode() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return false;
+  }
+  return window.matchMedia("(max-width: 900px) and (orientation: landscape)").matches;
+}
+
+function maybeShowCookTapGuide() {
+  if (!isMobileLandscapeCookMode() || !state.cookRecipe) {
+    state.cookTapGuideVisible = false;
+    clearTimeout(state.cookTapGuideTimer);
+    state.cookTapGuideTimer = null;
+    elements.cookTapZones?.classList.remove("is-guide-visible");
+    return;
+  }
+
+  if (localStorage.getItem("palette-cook-landscape-guide-seen") === "true") {
+    state.cookTapGuideVisible = false;
+    elements.cookTapZones?.classList.remove("is-guide-visible");
+    return;
+  }
+
+  state.cookTapGuideVisible = true;
+  elements.cookTapZones?.classList.add("is-guide-visible");
+  clearTimeout(state.cookTapGuideTimer);
+  state.cookTapGuideTimer = window.setTimeout(() => {
+    dismissCookTapGuide();
+  }, 2000);
+}
+
+function dismissCookTapGuide() {
+  state.cookTapGuideVisible = false;
+  clearTimeout(state.cookTapGuideTimer);
+  state.cookTapGuideTimer = null;
+  elements.cookTapZones?.classList.remove("is-guide-visible");
+  localStorage.setItem("palette-cook-landscape-guide-seen", "true");
 }
 
 function getThumbnailFallbackAttribute() {
@@ -1053,6 +1096,14 @@ function attachEventListeners() {
   elements.cookPreviousButton.addEventListener("click", retreatCookStep);
   elements.cookNextButton.addEventListener("click", advanceCookStep);
   elements.cookBackButton?.addEventListener("click", () => showScreen("results"));
+  elements.cookTapPrevZone?.addEventListener("click", () => {
+    if (state.cookTapGuideVisible) dismissCookTapGuide();
+    retreatCookStep();
+  });
+  elements.cookTapNextZone?.addEventListener("click", () => {
+    if (state.cookTapGuideVisible) dismissCookTapGuide();
+    advanceCookStep();
+  });
   elements.cookFullscreenButton?.addEventListener("click", toggleCookFullscreen);
   elements.finishSaveButton.addEventListener("click", () => {
     if (!state.cookRecipe) return;
@@ -1139,6 +1190,7 @@ function attachEventListeners() {
   window.addEventListener("resize", () => {
     if (getActiveScreen() === "cook" && state.cookRecipe) {
       updateCookScreen();
+      maybeShowCookTapGuide();
     }
   });
 
@@ -2552,6 +2604,7 @@ function startCooking(recipe) {
   state.cookAnimating = false;
   updateCookScreen();
   transitionToCookScreen();
+  maybeShowCookTapGuide();
   elements.alterModal.classList.add("hidden");
   elements.detailModal.classList.add("hidden");
   elements.shoppingModal.classList.add("hidden");
@@ -2604,7 +2657,7 @@ function updateCookScreen() {
   const currentStep = recipe.steps[state.cookStepIndex];
   const stepIngredients = getIngredientsForStep(recipe, currentStep);
   elements.cookRecipeTitle.textContent = recipe.title;
-  elements.cookIngredientsList.innerHTML = isMobilePortraitCookMode()
+  elements.cookIngredientsList.innerHTML = (isMobilePortraitCookMode() || isMobileLandscapeCookMode())
     ? ""
     : stepIngredients.length
       ? stepIngredients.map((ingredient) => `<p class="cook-ingredient-item">${ingredient}</p>`).join("")
@@ -2715,10 +2768,26 @@ function updateCookLine(line, recipe, stepIndex, offset, slotIndex) {
     return;
   }
 
-  const formattedStep = formatStepText(stepIndex, recipe.steps[stepIndex]);
-  const content = offset === 0
-    ? highlightIngredientsInStep(formattedStep, getIngredientsForStep(recipe, recipe.steps[stepIndex]))
-    : escapeHtml(formattedStep);
+  const stepText = recipe.steps[stepIndex];
+  const stepIngredients = getIngredientsForStep(recipe, stepText);
+  const formattedStep = formatStepText(stepIndex, stepText);
+  let content;
+
+  if (isMobileLandscapeCookMode()) {
+    if (offset === 0) {
+      const landscapeText = formatLandscapeCookStepText(stepText, stepIngredients);
+      content = `
+        <span class="cook-step-counter">${stepIndex + 1}/${recipe.steps.length}</span>
+        <span class="cook-step-body">${highlightIngredientsInStep(landscapeText, stepIngredients)}</span>
+      `;
+    } else {
+      content = `<span class="cook-step-body">${escapeHtml(stepText)}</span>`;
+    }
+  } else {
+    content = offset === 0
+      ? highlightIngredientsInStep(formattedStep, stepIngredients)
+      : escapeHtml(formattedStep);
+  }
 
   const roleClass = offset === 0
     ? "current"
@@ -2732,6 +2801,51 @@ function updateCookLine(line, recipe, stepIndex, offset, slotIndex) {
 
 function formatStepText(index, stepText) {
   return `${index + 1}. ${stepText}`;
+}
+
+function stripIngredientQuantityPhrase(ingredientLine, matchedText) {
+  const lowerIngredient = ingredientLine.toLowerCase();
+  const lowerMatch = matchedText.toLowerCase();
+  const matchIndex = lowerIngredient.indexOf(lowerMatch);
+  if (matchIndex <= 0) return ingredientLine.trim();
+  return ingredientLine.slice(0, matchIndex).replace(/[\s,/-]+$/g, "").trim();
+}
+
+function formatLandscapeCookStepText(stepText, stepIngredients) {
+  let output = stepText;
+
+  stepIngredients.forEach((ingredientLine) => {
+    const lowerStep = output.toLowerCase();
+    const lowerIngredient = ingredientLine.toLowerCase();
+    if (lowerStep.includes(lowerIngredient)) return;
+
+    const candidatePhrases = lowerIngredient
+      .split(/,| and /)
+      .map((phrase) => phrase.trim())
+      .filter(Boolean)
+      .sort((a, b) => b.length - a.length);
+
+    let inserted = false;
+    for (const phrase of candidatePhrases) {
+      const tokens = phrase.split(/[^a-z0-9]+/).filter((token) => token.length > 2);
+      const matchPhrase = tokens.find((token) => lowerStep.includes(token));
+      if (!matchPhrase) continue;
+
+      const displayDetail = stripIngredientQuantityPhrase(ingredientLine, matchPhrase);
+      if (!displayDetail || displayDetail.toLowerCase() === ingredientLine.toLowerCase()) continue;
+
+      const regex = new RegExp(`\\b${escapeRegExp(matchPhrase)}\\b`, "i");
+      output = output.replace(regex, `${matchPhrase} (${displayDetail})`);
+      inserted = true;
+      break;
+    }
+
+    if (!inserted) {
+      output = `${output} Use ${ingredientLine}.`;
+    }
+  });
+
+  return output;
 }
 
 function getIngredientsForStep(recipe, stepText) {
@@ -2812,6 +2926,9 @@ function escapeRegExp(value) {
 function showScreen(target) {
   if (target !== "cook" && document.fullscreenElement) {
     document.exitFullscreen().catch(() => {});
+  }
+  if (target !== "cook") {
+    dismissCookTapGuide();
   }
   elements.screens.forEach((screen) => {
     screen.classList.toggle("screen-active", screen.dataset.screen === target);

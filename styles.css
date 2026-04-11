@@ -1704,6 +1704,36 @@ textarea {
   transition: background-color 320ms ease, color 320ms ease, border-color 320ms ease;
 }
 
+.cook-tap-zones {
+  display: none;
+}
+
+.cook-tap-zone {
+  appearance: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  z-index: 1;
+}
+
+.cook-tap-zone-prev {
+  left: 0;
+}
+
+.cook-tap-zone-next {
+  right: 0;
+}
+
+.cook-tap-guide-text {
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
 .cook-ingredients {
   position: absolute;
   top: 52%;
@@ -1882,6 +1912,19 @@ textarea {
   font-weight: 500;
   text-align: left;
   transition: opacity 220ms ease, font-size 220ms ease, max-width 220ms ease;
+}
+
+.cook-step-counter,
+.cook-step-body {
+  display: block;
+}
+
+.cook-step-counter {
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .cook-ingredient-inline {
@@ -2912,14 +2955,88 @@ textarea {
     clip-path: inset(0 -100vmax);
   }
 
+  .cook-ingredients,
+  .cook-controls {
+    display: none !important;
+  }
+
+  .cook-content {
+    padding: 48px 42px 54px;
+  }
+
+  .cook-lyrics {
+    height: min(82vh, 760px);
+  }
+
+  .cook-line.current {
+    font-size: clamp(1.7rem, 4vw, 3rem);
+    line-height: 1.22;
+  }
+
+  .cook-line.ghost-near {
+    font-size: clamp(1rem, 1.7vw, 1.35rem);
+  }
+
+  .cook-line.ghost-far {
+    font-size: clamp(0.88rem, 1.35vw, 1.08rem);
+  }
+
+  .cook-step-counter {
+    margin-bottom: 14px;
+    font-size: 0.98rem;
+    color: rgba(255, 255, 255, 0.58);
+  }
+
+  .cook-tap-zones {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .cook-tap-zones.is-guide-visible .cook-tap-guide-text {
+    opacity: 1;
+  }
+
+  .cook-tap-guide-text {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 170px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.28);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  .cook-tap-zone-prev .cook-tap-guide-text {
+    left: 18px;
+  }
+
+  .cook-tap-zone-next .cook-tap-guide-text {
+    right: 18px;
+    text-align: right;
+  }
+
   .cook-fullscreen-button {
     display: inline-flex;
+    z-index: 3;
   }
 
   .cooking-screen:fullscreen,
   .cooking-screen:-webkit-full-screen {
     transform: scale(1.1);
     transform-origin: center center;
+  }
+
+  .cook-back-button,
+  .cook-recipe-title {
+    z-index: 3;
   }
 }
 
