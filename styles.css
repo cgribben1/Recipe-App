@@ -2865,10 +2865,6 @@ textarea {
 }
 
 @media (max-width: 900px) {
-  .cook-fullscreen-button {
-    display: none !important;
-  }
-
   .results-home-button,
   .cook-back-button,
   .finish-button,
@@ -2888,8 +2884,22 @@ textarea {
     height: 100dvh;
     border-radius: 0 !important;
     padding: 14px 16px;
+  }
+
+  .cook-fullscreen-button {
+    display: inline-flex;
+  }
+
+  .cooking-screen:fullscreen,
+  .cooking-screen:-webkit-full-screen {
     transform: scale(1.1);
     transform-origin: center center;
+  }
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .cook-fullscreen-button {
+    display: none !important;
   }
 }
 
