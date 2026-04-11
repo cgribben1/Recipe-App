@@ -555,6 +555,7 @@ const elements = {
   cookTrack: document.getElementById("cookTrack"),
   cookPreviousButton: document.getElementById("cookPreviousButton"),
   cookNextButton: document.getElementById("cookNextButton"),
+  cookBackButton: document.getElementById("cookBackButton"),
   finishSaveButton: document.getElementById("finishSaveButton"),
   finishBackButton: document.getElementById("finishBackButton"),
   cookFullscreenButton: document.getElementById("cookFullscreenButton")
@@ -1051,6 +1052,7 @@ function attachEventListeners() {
   elements.nextRecipeButton.addEventListener("click", () => moveRecipeIndex(1));
   elements.cookPreviousButton.addEventListener("click", retreatCookStep);
   elements.cookNextButton.addEventListener("click", advanceCookStep);
+  elements.cookBackButton?.addEventListener("click", () => showScreen("results"));
   elements.cookFullscreenButton?.addEventListener("click", toggleCookFullscreen);
   elements.finishSaveButton.addEventListener("click", () => {
     if (!state.cookRecipe) return;

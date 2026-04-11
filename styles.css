@@ -1665,13 +1665,18 @@ textarea {
   transition: background-color 360ms ease, color 360ms ease;
 }
 
-.cook-hint {
+.cook-back-button {
   position: absolute;
   top: 10px;
   left: 14px;
-  font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.58);
   z-index: 2;
+  margin-top: 0;
+  padding: 8px 12px;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.84);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  transition: background-color 320ms ease, color 320ms ease, border-color 320ms ease;
 }
 
 .cook-fullscreen-button {
@@ -2741,22 +2746,18 @@ textarea {
     color: #171717;
   }
 
-  .cook-hint {
+  .cook-back-button {
     top: 10px;
     left: 14px;
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    color: rgba(23, 23, 23, 0.48);
-  }
-
-  .cook-fullscreen-button {
-    top: 8px;
-    right: 12px;
     padding: 6px 10px;
     font-size: 0.62rem;
     color: rgba(23, 23, 23, 0.76);
     background: rgba(255, 255, 255, 0.74);
     border-color: rgba(23, 23, 23, 0.1);
+  }
+
+  .cook-fullscreen-button {
+    display: none !important;
   }
 
   .cook-recipe-title {
