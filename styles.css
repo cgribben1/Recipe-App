@@ -2330,7 +2330,7 @@ textarea {
 
   .deck-stack {
     order: 1;
-    min-height: 428px;
+    min-height: 460px;
     display: flex;
     align-items: center;
     background: transparent !important;
@@ -2370,7 +2370,7 @@ textarea {
 
   .recipe-card {
     height: auto;
-    min-height: 408px;
+    min-height: 438px;
     padding: 10px 11px;
     gap: 6px;
     overflow: hidden;
@@ -2424,13 +2424,13 @@ textarea {
   }
 
   .fact {
-    padding: 9px 6px;
-    font-size: 0.66rem;
+    padding: 11px 7px;
+    font-size: 0.7rem;
   }
 
   .fact-label {
-    font-size: 0.52rem;
-    margin-bottom: 2px;
+    font-size: 0.54rem;
+    margin-bottom: 3px;
   }
 
   .cook-controls {
@@ -2458,8 +2458,9 @@ textarea {
   }
 
   .card-actions-quiet .mini-button {
-    padding: 6px 9px;
-    font-size: 0.64rem;
+    min-height: 40px;
+    padding: 9px 13px;
+    font-size: 0.7rem;
   }
 
   .card-header {
@@ -2481,9 +2482,9 @@ textarea {
   .recipe-actions-primary-split > button {
     width: 100%;
     margin-top: 0;
-    min-height: 52px;
-    padding: 12px 10px;
-    font-size: 0.74rem;
+    min-height: 58px;
+    padding: 14px 12px;
+    font-size: 0.78rem;
   }
 
   .cook-controls {
