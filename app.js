@@ -633,11 +633,11 @@ function buildRecipeCache() {
     id: recipe.id || slugify(recipe.title),
     title: recipe.title,
     cuisine: recipe.cuisine,
-    summary: recipe.summary,
+    summary: enhanceRecipeSummary(recipe),
     moodTags: recipe.moodTags || [],
     ingredients: recipe.ingredients || [],
     shoppingList: recipe.shoppingList || recipe.ingredients || [],
-    steps: recipe.steps || [],
+    steps: enhanceRecipeSteps(recipe),
     servings: recipe.servings ?? 2,
     prepTime: recipe.prepTime ?? 15,
     cookTime: recipe.cookTime ?? 25,
@@ -648,6 +648,63 @@ function buildRecipeCache() {
     thumbnailPrompt: recipe.thumbnailPrompt || "",
     embedding: window.RECIPE_EMBEDDINGS?.vectors?.[recipe.id || slugify(recipe.title)] || null
   }));
+}
+
+function enhanceRecipeSummary(recipe) {
+  const base = (recipe.summary || "").trim();
+  if (!base) return base;
+  if (base.length > 165) return base;
+
+  const haystack = [
+    recipe.cuisine || "",
+    ...(recipe.moodTags || []),
+    ...(recipe.ingredients || []),
+    ...(recipe.steps || [])
+  ].join(" ").toLowerCase();
+
+  const notes = [];
+  if (/(rice|pilaf|jollof|steamed rice|coconut rice)/.test(haystack)) notes.push("Serve over rice.");
+  else if (/(pasta|rigatoni|spaghetti|linguine|udon|noodle|orzo)/.test(haystack)) notes.push("Best served hot and glossy.");
+  else if (/(bread|toast|flatbread|pita|crusty)/.test(haystack)) notes.push("Good with bread alongside.");
+  else if (/(salad|slaw)/.test(haystack)) notes.push("Best served straight away.");
+
+  if (/(lemon|lime|vinegar|caper|pickle)/.test(haystack)) notes.push("It has a bright finish.");
+  else if (/(cream|butter|coconut milk|bechamel|parmesan|cheese)/.test(haystack)) notes.push("It lands on the richer side.");
+
+  const extra = notes.find((note) => !base.toLowerCase().includes(note.toLowerCase()));
+  return extra ? `${base} ${extra}` : base;
+}
+
+function enhanceRecipeSteps(recipe) {
+  return (recipe.steps || []).map((step, index, allSteps) => {
+    let text = (step || "").trim();
+    if (!text) return text;
+
+    text = text.replace(/\s+/g, " ");
+    if (!/[.!?]$/.test(text)) text = `${text}.`;
+
+    if (/cook.*until/i.test(text) || /simmer.*until/i.test(text) || /roast.*until/i.test(text) || /bake.*until/i.test(text)) {
+      return text;
+    }
+
+    if (/(onion|shallot|garlic|ginger|spring onion|scallion)/i.test(text) && !/soft|fragrant|translucent/i.test(text)) {
+      return text.replace(/\.$/, " until softened and fragrant.");
+    }
+
+    if (/(tomato|sauce|stock|broth|coconut milk|cream)/i.test(text) && /simmer|cook/i.test(text) && !/thicken|reduc|slightly/i.test(text)) {
+      return text.replace(/\.$/, " until slightly reduced.");
+    }
+
+    if (/(roast|bake)/i.test(text) && !/golden|tender|cooked through|browned/i.test(text)) {
+      return text.replace(/\.$/, " until golden and cooked through.");
+    }
+
+    if (index === allSteps.length - 1 && !/serve/i.test(text)) {
+      return `${text.replace(/\.$/, "")} and serve straight away.`;
+    }
+
+    return text;
+  });
 }
 
 function getRecipeThumbnailPath(recipeId) {
@@ -2480,6 +2537,11 @@ function startCooking(recipe) {
   state.cookAnimating = false;
   updateCookScreen();
   transitionToCookScreen();
+  if (typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches) {
+    window.setTimeout(() => {
+      toggleCookFullscreen().catch(() => {});
+    }, 120);
+  }
   elements.alterModal.classList.add("hidden");
   elements.detailModal.classList.add("hidden");
   elements.shoppingModal.classList.add("hidden");
@@ -2509,7 +2571,7 @@ function transitionToCookScreen() {
     activeScreen.classList.remove("cook-screen-exit", "screen-active");
     cookScreen.classList.remove("cook-screen-enter");
     cookScreen.classList.add("screen-active");
-  }, 560);
+  }, 880);
 }
 
 function retreatCookStep() {

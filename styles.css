@@ -72,6 +72,20 @@ button {
   overflow: hidden;
 }
 
+.app-shell.screen-transitioning::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.app-shell.screen-transitioning-cook::after {
+  animation: cookDarkenOverlay 880ms cubic-bezier(.2,.9,.2,1) forwards;
+}
+
 .app-shell.screen-transitioning .screen {
   position: fixed;
   inset: 0;
@@ -93,12 +107,12 @@ button {
 }
 
 .cook-screen-enter {
-  animation: cookScreenEnter 560ms cubic-bezier(.2,.9,.2,1) forwards;
+  animation: cookScreenEnter 880ms cubic-bezier(.2,.9,.2,1) forwards;
   transform-origin: center center;
 }
 
 .cook-screen-exit {
-  animation: cookScreenExit 560ms cubic-bezier(.2,.9,.2,1) forwards;
+  animation: cookScreenExit 880ms cubic-bezier(.2,.9,.2,1) forwards;
   transform-origin: center center;
 }
 
@@ -1650,6 +1664,33 @@ textarea {
   height: 100vh;
 }
 
+.cook-rotate-guard {
+  display: none;
+}
+
+.cook-rotate-card {
+  width: min(420px, calc(100vw - 40px));
+  padding: 26px 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 44px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.cook-rotate-card h2 {
+  margin: 6px 0 8px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.cook-rotate-card p:last-child {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
 .cook-hint {
   position: absolute;
   top: 10px;
@@ -1974,18 +2015,18 @@ textarea {
 @keyframes cookScreenEnter {
   0% {
     opacity: 0;
-    transform: scale(1.035);
-    filter: blur(8px);
+    transform: scale(1.04);
+    filter: blur(12px) brightness(0.55);
   }
 
-  45% {
+  55% {
     opacity: 1;
   }
 
   100% {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0);
+    filter: blur(0) brightness(1);
   }
 }
 
@@ -1993,13 +2034,27 @@ textarea {
   0% {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0);
+    filter: blur(0) brightness(1);
   }
 
   100% {
     opacity: 0;
     transform: scale(0.985);
-    filter: blur(5px);
+    filter: blur(10px) brightness(0.4);
+  }
+}
+
+@keyframes cookDarkenOverlay {
+  0% {
+    opacity: 0;
+  }
+
+  45% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 
@@ -2633,6 +2688,26 @@ textarea {
   .modal-card {
     padding: 20px 16px;
     border-radius: 22px;
+  }
+
+  @media (orientation: portrait) {
+    .cooking-screen {
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+    }
+
+    .cooking-screen > *:not(.cook-rotate-guard) {
+      display: none !important;
+    }
+
+    .cook-rotate-guard {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 100%;
+    }
   }
 }
 
