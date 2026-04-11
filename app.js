@@ -711,6 +711,13 @@ function getRecipeThumbnailPath(recipeId) {
   return `./assets/thumbnails/${recipeId}.png`;
 }
 
+function isMobilePortraitCookMode() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return false;
+  }
+  return window.matchMedia("(max-width: 700px) and (orientation: portrait)").matches;
+}
+
 function getThumbnailFallbackAttribute() {
   return "this.onerror=null;this.src='./assets/thumbnails/recipe-placeholder.svg';";
 }
@@ -1126,6 +1133,12 @@ function attachEventListeners() {
   });
 
   document.addEventListener("fullscreenchange", updateCookFullscreenButton);
+
+  window.addEventListener("resize", () => {
+    if (getActiveScreen() === "cook" && state.cookRecipe) {
+      updateCookScreen();
+    }
+  });
 
   const exploreFrame = elements.exploreVisionGrid?.parentElement;
   exploreFrame?.addEventListener("pointerdown", (event) => {
@@ -2536,11 +2549,10 @@ function startCooking(recipe) {
   state.cookStepDirection = 1;
   state.cookAnimating = false;
   updateCookScreen();
-  transitionToCookScreen();
-  if (typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches) {
-    window.setTimeout(() => {
-      toggleCookFullscreen().catch(() => {});
-    }, 120);
+  if (isMobilePortraitCookMode()) {
+    showScreen("cook");
+  } else {
+    transitionToCookScreen();
   }
   elements.alterModal.classList.add("hidden");
   elements.detailModal.classList.add("hidden");
@@ -2594,9 +2606,11 @@ function updateCookScreen() {
   const currentStep = recipe.steps[state.cookStepIndex];
   const stepIngredients = getIngredientsForStep(recipe, currentStep);
   elements.cookRecipeTitle.textContent = recipe.title;
-  elements.cookIngredientsList.innerHTML = stepIngredients.length
-    ? stepIngredients.map((ingredient) => `<p class="cook-ingredient-item">${ingredient}</p>`).join("")
-    : `<p class="cook-ingredient-item cook-ingredient-item-muted">No specific ingredients mentioned in this step.</p>`;
+  elements.cookIngredientsList.innerHTML = isMobilePortraitCookMode()
+    ? ""
+    : stepIngredients.length
+      ? stepIngredients.map((ingredient) => `<p class="cook-ingredient-item">${ingredient}</p>`).join("")
+      : `<p class="cook-ingredient-item cook-ingredient-item-muted">No specific ingredients mentioned in this step.</p>`;
   renderCookTrack(state.cookStepIndex);
   elements.cookPreviousButton.innerHTML = "&#8593;";
   elements.cookPreviousButton.disabled = state.cookStepIndex === 0;
@@ -2608,6 +2622,19 @@ function updateCookScreen() {
 function animateCookStep(direction) {
   const recipe = state.cookRecipe;
   if (!recipe) return;
+
+  if (isMobilePortraitCookMode()) {
+    const nextIndex = state.cookStepIndex + direction;
+    if (nextIndex < 0 || nextIndex >= recipe.steps.length) return;
+    state.cookAnimating = true;
+    state.cookStepDirection = direction;
+    state.cookStepIndex = nextIndex;
+    updateCookScreen();
+    window.setTimeout(() => {
+      state.cookAnimating = false;
+    }, 180);
+    return;
+  }
 
   state.cookAnimating = true;
   state.cookStepDirection = direction;
@@ -2640,6 +2667,31 @@ function animateCookStep(direction) {
 function renderCookTrack(centerIndex) {
   const recipe = state.cookRecipe;
   if (!recipe) return;
+
+  if (isMobilePortraitCookMode()) {
+    elements.cookTrack.innerHTML = recipe.steps.map((step, index) => {
+      const stepIngredients = getIngredientsForStep(recipe, step);
+      const ingredientsMarkup = stepIngredients.length
+        ? `<div class="cook-step-card-ingredients">${stepIngredients.map((ingredient) => `<p class="cook-step-card-ingredient">${escapeHtml(ingredient)}</p>`).join("")}</div>`
+        : `<p class="cook-step-card-ingredient cook-step-card-ingredient-muted">No specific ingredients called out in this step.</p>`;
+
+      return `
+        <article class="cook-step-card${index === centerIndex ? " is-current" : ""}">
+          <p class="cook-step-card-index">Step ${index + 1}</p>
+          <p class="cook-step-card-text">${highlightIngredientsInStep(formatStepText(index, step), stepIngredients)}</p>
+          <div class="cook-step-card-divider"></div>
+          ${ingredientsMarkup}
+        </article>
+      `;
+    }).join("");
+
+    const currentCard = elements.cookTrack.children[centerIndex];
+    currentCard?.scrollIntoView({
+      block: "start",
+      behavior: state.cookAnimating ? "smooth" : "auto"
+    });
+    return;
+  }
 
   const offsets = [-2, -1, 0, 1, 2];
   ensureCookTrackSlots();
