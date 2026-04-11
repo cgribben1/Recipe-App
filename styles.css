@@ -2888,6 +2888,8 @@ textarea {
     height: 100dvh;
     border-radius: 0 !important;
     padding: 14px 16px;
+    transform: scale(1.1);
+    transform-origin: center center;
   }
 }
 
