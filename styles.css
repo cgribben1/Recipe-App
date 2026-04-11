@@ -2329,6 +2329,8 @@ textarea {
     min-height: 428px;
     display: flex;
     align-items: center;
+    background: transparent;
+    box-shadow: none;
   }
 
   .nav-arrow {
@@ -2345,7 +2347,7 @@ textarea {
 
   .recipe-card {
     height: auto;
-    min-height: 380px;
+    min-height: 408px;
     padding: 10px 11px;
     gap: 6px;
   }
@@ -2358,7 +2360,7 @@ textarea {
   }
 
   .recipe-thumb {
-    max-height: 156px;
+    max-height: 176px;
   }
 
   .recipe-summary {
@@ -2398,7 +2400,7 @@ textarea {
   }
 
   .fact {
-    padding: 6px 5px;
+    padding: 9px 6px;
     font-size: 0.66rem;
   }
 
@@ -2455,7 +2457,8 @@ textarea {
   .recipe-actions-primary-split > button {
     width: 100%;
     margin-top: 0;
-    padding: 7px 8px;
+    min-height: 42px;
+    padding: 10px 8px;
     font-size: 0.66rem;
   }
 
