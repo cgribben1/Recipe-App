@@ -2489,6 +2489,7 @@ textarea {
     border: 0 !important;
     border-radius: 28px;
     overflow: hidden;
+    margin-top: -12px;
   }
 
   .recipe-card-transition {
@@ -2565,8 +2566,8 @@ textarea {
   }
 
   .deck-dots {
-    margin-top: 0;
-    padding-bottom: 8px;
+    margin-top: -8px;
+    padding-bottom: 2px;
   }
 
   .tag {
@@ -3002,16 +3003,17 @@ textarea {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    max-width: 170px;
-    padding: 10px 12px;
+    max-width: 200px;
+    padding: 12px 14px;
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(0, 0, 0, 0.28);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.72rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.8rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     pointer-events: none;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
   }
 
   .cook-tap-zone-prev .cook-tap-guide-text {

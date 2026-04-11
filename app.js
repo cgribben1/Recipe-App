@@ -740,12 +740,6 @@ function maybeShowCookTapGuide() {
     return;
   }
 
-  if (localStorage.getItem("palette-cook-landscape-guide-seen") === "true") {
-    state.cookTapGuideVisible = false;
-    elements.cookTapZones?.classList.remove("is-guide-visible");
-    return;
-  }
-
   state.cookTapGuideVisible = true;
   elements.cookTapZones?.classList.add("is-guide-visible");
   clearTimeout(state.cookTapGuideTimer);
@@ -759,7 +753,6 @@ function dismissCookTapGuide() {
   clearTimeout(state.cookTapGuideTimer);
   state.cookTapGuideTimer = null;
   elements.cookTapZones?.classList.remove("is-guide-visible");
-  localStorage.setItem("palette-cook-landscape-guide-seen", "true");
 }
 
 function ensurePortraitCookExitsFullscreen() {
