@@ -1708,18 +1708,19 @@ textarea {
   display: none;
 }
 
-.cook-tap-zone {
-  appearance: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
+  .cook-tap-zone {
+    appearance: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
   width: 50%;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  margin: 0;
-  z-index: 1;
-}
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    z-index: 1;
+    transition: background-color 220ms ease;
+  }
 
 .cook-tap-zone-prev {
   left: 0;
@@ -2999,6 +3000,10 @@ textarea {
     opacity: 1;
   }
 
+  .cook-tap-zones.is-guide-visible .cook-tap-zone {
+    background: rgba(140, 140, 140, 0.18);
+  }
+
   .cook-tap-guide-text {
     position: absolute;
     top: 50%;
@@ -3007,7 +3012,7 @@ textarea {
     padding: 12px 14px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.14);
     color: rgba(255, 255, 255, 0.92);
     font-size: 0.8rem;
     letter-spacing: 0.06em;

@@ -745,7 +745,7 @@ function maybeShowCookTapGuide() {
   clearTimeout(state.cookTapGuideTimer);
   state.cookTapGuideTimer = window.setTimeout(() => {
     dismissCookTapGuide();
-  }, 2000);
+  }, 3000);
 }
 
 function dismissCookTapGuide() {
