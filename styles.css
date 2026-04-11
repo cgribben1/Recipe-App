@@ -2544,7 +2544,8 @@ textarea {
 
   .treadmill-slot .prompt-suggestion-chip {
     font-size: 0.68rem;
-    padding: 6px 12px;
+    padding: 9px 13px;
+    min-height: 34px;
   }
 
   .loading-panel h2,
