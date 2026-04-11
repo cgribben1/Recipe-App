@@ -1209,6 +1209,8 @@ textarea {
   overflow-y: visible;
   --swipe-offset: 0px;
   contain: layout paint;
+  background: transparent;
+  box-shadow: none;
 }
 
 .transition-card {
@@ -1220,6 +1222,7 @@ textarea {
   animation: none !important;
   backface-visibility: hidden;
   will-change: transform, opacity;
+  background: transparent;
 }
 
 .transition-forward .transition-card-current,
@@ -2284,14 +2287,15 @@ textarea {
 
   .results-screen {
     justify-content: flex-start;
-    padding: 8px 10px 10px;
-    gap: 4px;
+    padding: 18px 10px 10px;
+    gap: 6px;
   }
 
   .results-topbar {
     align-items: flex-start;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
+    margin-top: 4px;
   }
 
   .results-heading {
@@ -2331,6 +2335,11 @@ textarea {
     align-items: center;
     background: transparent;
     box-shadow: none;
+  }
+
+  .recipe-card-transition {
+    border-radius: 30px;
+    overflow: hidden;
   }
 
   .nav-arrow {
@@ -2390,8 +2399,8 @@ textarea {
   }
 
   .deck-dots {
-    margin-top: auto;
-    padding-bottom: 8px;
+    margin-top: 14px;
+    padding-bottom: 4px;
   }
 
   .tag {
@@ -2457,9 +2466,9 @@ textarea {
   .recipe-actions-primary-split > button {
     width: 100%;
     margin-top: 0;
-    min-height: 42px;
-    padding: 10px 8px;
-    font-size: 0.66rem;
+    min-height: 52px;
+    padding: 12px 10px;
+    font-size: 0.74rem;
   }
 
   .cook-controls {
