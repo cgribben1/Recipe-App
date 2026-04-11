@@ -2326,7 +2326,7 @@ textarea {
 
   .deck-stack {
     order: 1;
-    min-height: 418px;
+    min-height: 372px;
     display: flex;
     align-items: flex-start;
   }
@@ -2345,19 +2345,20 @@ textarea {
 
   .recipe-card {
     height: auto;
-    min-height: 392px;
-    padding: 12px 13px;
-    gap: 8px;
+    min-height: 344px;
+    padding: 10px 11px;
+    gap: 6px;
   }
 
   .recipe-title-row h3,
   .saved-item h3,
   .card-copy h3 {
-    font-size: clamp(1.55rem, 8vw, 2.2rem);
+    font-size: clamp(1.22rem, 6.8vw, 1.56rem);
+    line-height: 1.02;
   }
 
   .recipe-thumb {
-    max-height: 128px;
+    max-height: 100px;
   }
 
   .recipe-summary {
@@ -2371,18 +2372,19 @@ textarea {
   }
 
   .facts-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .card-header,
   .card-meta,
   .recipe-actions,
   .cook-controls {
-    gap: 8px;
+    gap: 6px;
   }
 
   .card-main {
-    gap: 8px;
+    gap: 6px;
   }
 
   .deck-dots {
@@ -2391,18 +2393,18 @@ textarea {
   }
 
   .tag {
-    padding: 5px 8px;
-    font-size: 0.7rem;
+    padding: 4px 7px;
+    font-size: 0.64rem;
   }
 
   .fact {
-    padding: 7px 6px;
-    font-size: 0.72rem;
+    padding: 6px 5px;
+    font-size: 0.66rem;
   }
 
   .fact-label {
-    font-size: 0.58rem;
-    margin-bottom: 3px;
+    font-size: 0.52rem;
+    margin-bottom: 2px;
   }
 
   .cook-controls {
@@ -2416,7 +2418,7 @@ textarea {
 
   .card-actions-quiet {
     width: 100%;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: nowrap;
     justify-content: flex-start;
   }
@@ -2430,8 +2432,8 @@ textarea {
   }
 
   .card-actions-quiet .mini-button {
-    padding: 7px 10px;
-    font-size: 0.68rem;
+    padding: 6px 9px;
+    font-size: 0.64rem;
   }
 
   .card-header {
@@ -2447,14 +2449,14 @@ textarea {
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 100%;
-    gap: 6px;
+    gap: 5px;
   }
 
   .recipe-actions-primary-split > button {
     width: 100%;
     margin-top: 0;
-    padding: 8px 9px;
-    font-size: 0.72rem;
+    padding: 7px 8px;
+    font-size: 0.66rem;
   }
 
   .cook-controls {
@@ -2543,9 +2545,9 @@ textarea {
   }
 
   .treadmill-slot .prompt-suggestion-chip {
-    font-size: 0.68rem;
-    padding: 9px 13px;
-    min-height: 34px;
+    font-size: 0.74rem;
+    padding: 11px 16px 11px 19px;
+    min-height: 42px;
   }
 
   .loading-panel h2,
@@ -2555,13 +2557,13 @@ textarea {
 
   .recipe-card {
     height: auto;
-    min-height: 404px;
-    padding: 14px;
+    min-height: 332px;
+    padding: 11px;
     border-radius: 28px;
   }
 
   .deck-stack {
-    min-height: 416px;
+    min-height: 356px;
     height: auto;
   }
 
