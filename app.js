@@ -2549,11 +2549,7 @@ function startCooking(recipe) {
   state.cookStepDirection = 1;
   state.cookAnimating = false;
   updateCookScreen();
-  if (isMobilePortraitCookMode()) {
-    showScreen("cook");
-  } else {
-    transitionToCookScreen();
-  }
+  transitionToCookScreen();
   elements.alterModal.classList.add("hidden");
   elements.detailModal.classList.add("hidden");
   elements.shoppingModal.classList.add("hidden");

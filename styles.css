@@ -2248,6 +2248,10 @@ textarea {
     margin-top: 10px;
   }
 
+  .screen[data-screen="landing"] .control-block-vibe {
+    margin-top: 20px;
+  }
+
   .landing-action-row {
     margin-top: 10px;
   }
@@ -2649,6 +2653,10 @@ textarea {
 
   .screen[data-screen="landing"] .diet-grid .complexity-chip {
     min-height: 44px;
+  }
+
+  .screen[data-screen="landing"] .control-block-vibe {
+    margin-top: 24px;
   }
 
   .treadmill-slot .prompt-suggestion-chip {
