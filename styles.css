@@ -3001,7 +3001,17 @@ textarea {
   }
 
   .cook-tap-zones.is-guide-visible .cook-tap-zone {
-    background: rgba(140, 140, 140, 0.18);
+    background: transparent;
+  }
+
+  .cook-tap-zones.is-guide-visible .cook-tap-zone-prev {
+    background: linear-gradient(115deg, rgba(190, 190, 190, 0.26) 0%, rgba(130, 130, 130, 0.14) 72%, rgba(130, 130, 130, 0.02) 100%);
+    clip-path: polygon(0 0, 88% 0, 72% 100%, 0 100%);
+  }
+
+  .cook-tap-zones.is-guide-visible .cook-tap-zone-next {
+    background: linear-gradient(245deg, rgba(120, 120, 120, 0.22) 0%, rgba(82, 82, 82, 0.12) 72%, rgba(82, 82, 82, 0.02) 100%);
+    clip-path: polygon(12% 0, 100% 0, 100% 100%, 28% 100%);
   }
 
   .cook-tap-guide-text {
@@ -3037,8 +3047,11 @@ textarea {
 
   .cooking-screen:fullscreen,
   .cooking-screen:-webkit-full-screen {
-    transform: scale(1);
+    transform: none !important;
     transform-origin: center center;
+    width: 100vw;
+    min-height: 100dvh;
+    height: 100dvh;
   }
 
   .cook-back-button,
