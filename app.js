@@ -1188,6 +1188,9 @@ function attachEventListeners() {
   document.addEventListener("fullscreenchange", updateCookFullscreenButton);
 
   window.addEventListener("resize", () => {
+    if (document.fullscreenElement && isMobilePortraitCookMode()) {
+      document.exitFullscreen().catch(() => {});
+    }
     if (getActiveScreen() === "cook" && state.cookRecipe) {
       updateCookScreen();
       maybeShowCookTapGuide();
@@ -2673,6 +2676,14 @@ function updateCookScreen() {
 function animateCookStep(direction) {
   const recipe = state.cookRecipe;
   if (!recipe) return;
+
+  if (isMobileLandscapeCookMode()) {
+    const nextIndex = state.cookStepIndex + direction;
+    if (nextIndex < 0 || nextIndex >= recipe.steps.length) return;
+    state.cookStepIndex = nextIndex;
+    updateCookScreen();
+    return;
+  }
 
   if (isMobilePortraitCookMode()) {
     const nextIndex = state.cookStepIndex + direction;

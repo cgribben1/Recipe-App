@@ -3030,7 +3030,7 @@ textarea {
 
   .cooking-screen:fullscreen,
   .cooking-screen:-webkit-full-screen {
-    transform: scale(1.1);
+    transform: scale(1.03);
     transform-origin: center center;
   }
 
