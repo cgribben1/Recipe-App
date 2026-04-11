@@ -2284,29 +2284,29 @@ textarea {
 
   .results-screen {
     justify-content: flex-start;
-    padding: 6px 12px 8px;
-    gap: 4px;
+    padding: 4px 10px 6px;
+    gap: 3px;
   }
 
   .results-topbar {
     align-items: flex-start;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
   }
 
   .results-heading {
-    font-size: 0.84rem;
-    line-height: 1.12;
+    font-size: 0.78rem;
+    line-height: 1.08;
   }
 
   .results-home-button {
-    font-size: 0.64rem;
-    padding: 6px 9px;
+    font-size: 0.6rem;
+    padding: 5px 8px;
   }
 
   .deck-frame {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 6px;
     flex: 0 0 auto;
     align-content: flex-start;
   }
@@ -2326,7 +2326,7 @@ textarea {
 
   .deck-stack {
     order: 1;
-    min-height: 472px;
+    min-height: 418px;
     display: flex;
     align-items: flex-start;
   }
@@ -2345,9 +2345,9 @@ textarea {
 
   .recipe-card {
     height: auto;
-    min-height: 448px;
-    padding: 15px 16px;
-    gap: 10px;
+    min-height: 392px;
+    padding: 12px 13px;
+    gap: 8px;
   }
 
   .recipe-title-row h3,
@@ -2357,13 +2357,13 @@ textarea {
   }
 
   .recipe-thumb {
-    max-height: 164px;
+    max-height: 128px;
   }
 
   .recipe-summary {
-    font-size: 0.78rem;
-    line-height: 1.38;
-    min-height: calc(1.38em * 2);
+    font-size: 0.72rem;
+    line-height: 1.28;
+    min-height: calc(1.28em * 2);
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -2382,27 +2382,27 @@ textarea {
   }
 
   .card-main {
-    gap: 10px;
+    gap: 8px;
   }
 
   .deck-dots {
-    margin-top: 6px;
-    padding-bottom: 2px;
+    margin-top: 4px;
+    padding-bottom: 0;
   }
 
   .tag {
-    padding: 6px 9px;
-    font-size: 0.76rem;
+    padding: 5px 8px;
+    font-size: 0.7rem;
   }
 
   .fact {
-    padding: 8px 7px;
-    font-size: 0.8rem;
+    padding: 7px 6px;
+    font-size: 0.72rem;
   }
 
   .fact-label {
-    font-size: 0.64rem;
-    margin-bottom: 4px;
+    font-size: 0.58rem;
+    margin-bottom: 3px;
   }
 
   .cook-controls {
@@ -2430,8 +2430,8 @@ textarea {
   }
 
   .card-actions-quiet .mini-button {
-    padding: 8px 11px;
-    font-size: 0.72rem;
+    padding: 7px 10px;
+    font-size: 0.68rem;
   }
 
   .card-header {
@@ -2447,14 +2447,14 @@ textarea {
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 100%;
-    gap: 8px;
+    gap: 6px;
   }
 
   .recipe-actions-primary-split > button {
     width: 100%;
     margin-top: 0;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 8px 9px;
+    font-size: 0.72rem;
   }
 
   .cook-controls {
