@@ -2344,7 +2344,7 @@ textarea {
   }
 
   .recipe-card {
-    height: 448px;
+    height: auto;
     min-height: 448px;
     padding: 15px 16px;
     gap: 10px;
@@ -2554,7 +2554,7 @@ textarea {
   }
 
   .recipe-card {
-    height: 404px;
+    height: auto;
     min-height: 404px;
     padding: 14px;
     border-radius: 28px;
@@ -2562,7 +2562,7 @@ textarea {
 
   .deck-stack {
     min-height: 416px;
-    height: 416px;
+    height: auto;
   }
 
   .card-actions-quiet .mini-button {

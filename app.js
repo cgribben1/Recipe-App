@@ -2006,6 +2006,10 @@ function renderRecipeDeck() {
   const direction = state.skipNextRecipeCardAnimation ? 0 : state.recipeNavDirection;
   state.skipNextRecipeCardAnimation = false;
   elements.recipeDeck.innerHTML = createRecipeCardMarkup(recipe, direction);
+  if (isMobileCardLayout()) {
+    const renderedCard = elements.recipeDeck.querySelector(".recipe-card");
+    elements.recipeDeck.style.height = renderedCard ? `${renderedCard.offsetHeight}px` : "";
+  }
   renderRecipeDots();
 }
 
