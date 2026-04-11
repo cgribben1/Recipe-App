@@ -2816,6 +2816,7 @@ function showScreen(target) {
   elements.screens.forEach((screen) => {
     screen.classList.toggle("screen-active", screen.dataset.screen === target);
   });
+  document.body.classList.toggle("cook-active", target === "cook");
   updateCookFullscreenButton();
 }
 

@@ -28,6 +28,10 @@ body {
   min-height: 100vh;
 }
 
+body.cook-active {
+  background: #000;
+}
+
 button,
 textarea,
 input {
@@ -2874,8 +2878,24 @@ textarea {
 }
 
 @media (max-width: 900px) and (orientation: landscape) {
+  html,
+  body,
+  body.cook-active,
+  body.cook-active .app-shell {
+    background: #000 !important;
+  }
+
   .screen[data-screen="cook"] {
     padding: 0 !important;
+  }
+
+  .screen[data-screen="cook"].screen-active {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    min-height: 100dvh;
+    height: 100dvh;
+    z-index: 20;
   }
 
   .cooking-screen {
@@ -2883,7 +2903,13 @@ textarea {
     min-height: 100dvh;
     height: 100dvh;
     border-radius: 0 !important;
-    padding: 14px 16px;
+    padding:
+      max(14px, env(safe-area-inset-top))
+      max(16px, env(safe-area-inset-right))
+      max(14px, env(safe-area-inset-bottom))
+      max(16px, env(safe-area-inset-left));
+    box-shadow: 0 0 0 100vmax #000;
+    clip-path: inset(0 -100vmax);
   }
 
   .cook-fullscreen-button {
