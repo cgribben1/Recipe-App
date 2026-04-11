@@ -1735,8 +1735,8 @@ async function runRecipeSearch() {
     state.currentCardIndex = 0;
     state.recipeNavDirection = 1;
     resetAppScrollPosition();
-    renderRecipeDeck();
     showScreen("results");
+    renderRecipeDeck();
     resetAppScrollPosition();
   }, 1400);
 }

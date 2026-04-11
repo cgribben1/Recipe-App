@@ -2287,7 +2287,7 @@ textarea {
 
   .results-screen {
     justify-content: flex-start;
-    padding: 30px 10px 10px;
+    padding: 44px 10px 10px;
     gap: 6px;
   }
 
@@ -2295,7 +2295,7 @@ textarea {
     align-items: flex-start;
     flex-direction: column;
     gap: 4px;
-    margin-top: 10px;
+    margin-top: 18px;
   }
 
   .results-heading {
@@ -2330,18 +2330,18 @@ textarea {
 
   .deck-stack {
     order: 1;
-    min-height: 460px;
+    min-height: 448px;
     display: flex;
     align-items: center;
     background: transparent !important;
     box-shadow: none !important;
     border: 0 !important;
-    border-radius: 30px;
+    border-radius: 28px;
     overflow: hidden;
   }
 
   .recipe-card-transition {
-    border-radius: 30px;
+    border-radius: 28px;
     overflow: hidden;
     background: transparent !important;
     box-shadow: none !important;
@@ -2352,7 +2352,7 @@ textarea {
     background: transparent !important;
     box-shadow: none !important;
     border: 0 !important;
-    border-radius: 30px;
+    border-radius: 28px;
     overflow: hidden;
   }
 
@@ -2414,8 +2414,8 @@ textarea {
   }
 
   .deck-dots {
-    margin-top: 4px;
-    padding-bottom: 4px;
+    margin-top: 0;
+    padding-bottom: 18px;
   }
 
   .tag {
@@ -2585,14 +2585,29 @@ textarea {
 
   .recipe-card {
     height: auto;
-    min-height: 332px;
+    min-height: 388px;
     padding: 11px;
     border-radius: 28px;
+    overflow: hidden;
   }
 
   .deck-stack {
-    min-height: 356px;
+    min-height: 416px;
     height: auto;
+    border-radius: 28px;
+    overflow: hidden;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+
+  .recipe-card-transition,
+  .transition-card {
+    border-radius: 28px;
+    overflow: hidden;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
   }
 
   .card-actions-quiet .mini-button {
