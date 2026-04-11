@@ -2521,17 +2521,17 @@ textarea {
 
   .recipe-card {
     height: auto;
-    min-height: 438px;
-    padding: 10px 11px;
-    gap: 6px;
+    min-height: 446px;
+    padding: 12px 13px;
+    gap: 8px;
     overflow: hidden;
   }
 
   .recipe-title-row h3,
   .saved-item h3,
   .card-copy h3 {
-    font-size: clamp(1.22rem, 6.8vw, 1.56rem);
-    line-height: 1.02;
+    font-size: clamp(1.34rem, 7.4vw, 1.7rem);
+    line-height: 1.06;
   }
 
   .recipe-thumb {
@@ -2539,9 +2539,9 @@ textarea {
   }
 
   .recipe-summary {
-    font-size: 0.72rem;
-    line-height: 1.28;
-    min-height: calc(1.28em * 2);
+    font-size: 0.82rem;
+    line-height: 1.34;
+    min-height: calc(1.34em * 2);
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -2570,17 +2570,17 @@ textarea {
   }
 
   .tag {
-    padding: 4px 7px;
-    font-size: 0.64rem;
+    padding: 5px 8px;
+    font-size: 0.71rem;
   }
 
   .fact {
-    padding: 11px 7px;
-    font-size: 0.7rem;
+    padding: 12px 8px;
+    font-size: 0.78rem;
   }
 
   .fact-label {
-    font-size: 0.54rem;
+    font-size: 0.6rem;
     margin-bottom: 3px;
   }
 
@@ -2610,8 +2610,8 @@ textarea {
 
   .card-actions-quiet .mini-button {
     min-height: 40px;
-    padding: 9px 13px;
-    font-size: 0.7rem;
+    padding: 10px 14px;
+    font-size: 0.78rem;
   }
 
   .card-header {
@@ -2633,9 +2633,9 @@ textarea {
   .recipe-actions-primary-split > button {
     width: 100%;
     margin-top: 0;
-    min-height: 58px;
-    padding: 14px 12px;
-    font-size: 0.78rem;
+    min-height: 62px;
+    padding: 15px 13px;
+    font-size: 0.84rem;
   }
 
   .cook-controls {
@@ -3030,7 +3030,7 @@ textarea {
 
   .cooking-screen:fullscreen,
   .cooking-screen:-webkit-full-screen {
-    transform: scale(1.03);
+    transform: scale(1);
     transform-origin: center center;
   }
 

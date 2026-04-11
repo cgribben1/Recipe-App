@@ -762,6 +762,12 @@ function dismissCookTapGuide() {
   localStorage.setItem("palette-cook-landscape-guide-seen", "true");
 }
 
+function ensurePortraitCookExitsFullscreen() {
+  if (document.fullscreenElement && isMobilePortraitCookMode()) {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
 function getThumbnailFallbackAttribute() {
   return "this.onerror=null;this.src='./assets/thumbnails/recipe-placeholder.svg';";
 }
@@ -1185,16 +1191,27 @@ function attachEventListeners() {
     if (event.key === "ArrowRight") moveRecipeIndex(1);
   });
 
-  document.addEventListener("fullscreenchange", updateCookFullscreenButton);
+  document.addEventListener("fullscreenchange", () => {
+    ensurePortraitCookExitsFullscreen();
+    updateCookFullscreenButton();
+  });
 
   window.addEventListener("resize", () => {
-    if (document.fullscreenElement && isMobilePortraitCookMode()) {
-      document.exitFullscreen().catch(() => {});
-    }
+    ensurePortraitCookExitsFullscreen();
     if (getActiveScreen() === "cook" && state.cookRecipe) {
       updateCookScreen();
       maybeShowCookTapGuide();
     }
+  });
+
+  window.addEventListener("orientationchange", () => {
+    window.setTimeout(() => {
+      ensurePortraitCookExitsFullscreen();
+      if (getActiveScreen() === "cook" && state.cookRecipe) {
+        updateCookScreen();
+        maybeShowCookTapGuide();
+      }
+    }, 60);
   });
 
   const exploreFrame = elements.exploreVisionGrid?.parentElement;
